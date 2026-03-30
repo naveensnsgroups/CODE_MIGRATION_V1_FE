@@ -30,8 +30,16 @@ export const useAuth = () => {
   const processCallback = async (code: string) => {
     setLoading(true);
     try {
-      const response = await exchangeCodeForToken(code);
-      handleLogin(response);
+      // Direct GET callback to backend which handles token exchange
+      const response = await fetch(`http://localhost:8000/api/auth/callback?code=${code}`);
+      const data = await response.json();
+      
+      if (data.access_token) {
+        localStorage.setItem('github_token', data.access_token);
+        localStorage.setItem('github_user', JSON.stringify(data.user));
+        setUser(data.user);
+        return data;
+      }
     } catch (err: any) {
       setError(err.message || 'Authentication failed');
     } finally {
