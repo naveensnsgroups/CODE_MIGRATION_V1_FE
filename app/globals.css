@@ -14,7 +14,7 @@
   --foreground: 240 10% 3.9%;
   --muted: 240 3.8% 46.1%;
   --border: 240 5.9% 90%;
-  --primary: 240 5.9% 10%;
+  --primary: 240 5.9% 10%; /* Sharp Black */
   --secondary: 240 4.8% 95.9%;
 }
 
@@ -23,7 +23,7 @@
   --foreground: 0 0% 98%;
   --muted: 240 5% 64.9%;
   --border: 240 3.7% 15.9%;
-  --primary: 0 0% 98%;
+  --primary: 0 0% 100%; /* Pure White */
   --secondary: 240 3.7% 15.9%;
 }
 
@@ -37,6 +37,18 @@
 
 @utility text-muted {
   color: hsl(var(--muted));
+}
+
+@utility bg-primary {
+  background-color: hsl(var(--primary));
+}
+
+@utility text-primary {
+  color: hsl(var(--primary));
+}
+
+@utility text-background {
+  color: hsl(var(--background));
 }
 
 @utility bg-secondary {
