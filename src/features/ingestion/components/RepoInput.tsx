@@ -33,7 +33,7 @@ export const RepoInput: React.FC<RepoInputProps> = ({ onAnalyze, loading }) => {
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://github.com/organization/repository"
           required
-          className="flex-1 bg-secondary/30 border border-border rounded-xl px-4 py-3 text-sm transition-all focus:ring-2 focus:ring-primary/20 focus:border-primary/50 outline-none placeholder:text-muted/50 font-mono text-foreground"
+          className="flex-1 bg-secondary/30 border border-border rounded-sm px-4 py-3 text-sm transition-all focus:ring-2 focus:ring-primary/20 focus:border-primary/50 outline-none placeholder:text-muted/50 font-mono text-foreground"
         />
         <Button
           type="submit"
