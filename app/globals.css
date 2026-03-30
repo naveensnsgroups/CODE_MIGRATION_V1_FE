@@ -10,21 +10,12 @@
 }
 
 :root {
-  --background: 0 0% 100%;
+  --background: 210 40% 98%; /* Ash Gray #f8fafc */
   --foreground: 240 10% 3.9%;
   --muted: 240 3.8% 46.1%;
   --border: 240 5.9% 90%;
-  --primary: 240 5.9% 10%; /* Sharp Black */
-  --secondary: 240 4.8% 95.9%;
-}
-
-.dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --muted: 240 5% 64.9%;
-  --border: 240 3.7% 15.9%;
-  --primary: 0 0% 100%; /* Pure White */
-  --secondary: 240 3.7% 15.9%;
+  --primary: 0 0% 0%; /* Solid Black #000000 */
+  --secondary: 0 0% 100%; /* Pure White */
 }
 
 @utility bg-background {
@@ -69,24 +60,56 @@ body {
 
 @layer base {
   h1 {
-    @apply text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl;
+    @apply text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-7xl mb-4;
   }
 
   h2 {
-    @apply text-3xl font-semibold tracking-tight first:mt-0;
+    @apply text-2xl font-bold tracking-tight first:mt-0 uppercase font-sans;
   }
 
   h3 {
-    @apply text-2xl font-semibold tracking-tight;
+    @apply text-xl font-bold tracking-tight uppercase font-sans;
   }
 
   p {
-    @apply leading-7 text-muted;
+    @apply leading-7 text-muted font-medium;
   }
+
+  .glass-card {
+    @apply bg-background border border-border shadow-2xl;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full hover:bg-primary transition-colors;
 }
 
 @layer components {
   .glass-card {
-    @apply bg-white/5 backdrop-blur-sm border border-border rounded-2xl shadow-sm;
+    @apply bg-white border border-border rounded-sm shadow-sm;
   }
 }

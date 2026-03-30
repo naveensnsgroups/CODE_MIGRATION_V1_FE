@@ -1,11 +1,22 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { RepoInput, FileTree, useIngestion } from '@/features/ingestion';
 import { Navbar } from '@/components/common/Navbar';
 
 export default function DashboardPage() {
   const { data, loading, error, startIngestion } = useIngestion();
+  const searchParams = useSearchParams();
+  const autoStarted = useRef(false);
+
+  useEffect(() => {
+    const urlParam = searchParams.get('url');
+    if (urlParam && !autoStarted.current) {
+      autoStarted.current = true;
+      startIngestion(urlParam);
+    }
+  }, [searchParams, startIngestion]);
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary/10">

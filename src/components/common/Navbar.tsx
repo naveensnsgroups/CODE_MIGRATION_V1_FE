@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import { LoginButton } from '@/features/auth';
 
 export const Navbar = () => {
   return (
@@ -12,8 +10,6 @@ export const Navbar = () => {
           <span className="font-semibold tracking-tight text-sm uppercase">Migration Platform</span>
         </div>
         <div className="flex items-center gap-6">
-          <ThemeToggle />
-          <LoginButton />
         </div>
       </div>
     </nav>
