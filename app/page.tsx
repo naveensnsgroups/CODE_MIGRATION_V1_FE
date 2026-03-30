@@ -32,9 +32,6 @@ export default function LandingPage() {
                 Launch Dashboard
               </Button>
             </Link>
-            <Button variant="outline" className="px-10 h-14 text-base">
-              Explore Docs
-            </Button>
           </div>
         </section>
       </main>
