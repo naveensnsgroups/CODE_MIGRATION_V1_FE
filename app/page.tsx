@@ -8,14 +8,6 @@ import { Button } from '@/components/common/Button';
 export default function LandingPage() {
   const [repoUrl, setRepoUrl] = useState('');
   const router = useRouter();
-  const [isRedirecting, setIsRedirecting] = useState(false);
-
-  const handleGitHubLogin = () => {
-    if (isRedirecting) return;
-    setIsRedirecting(true);
-    if (repoUrl) localStorage.setItem('target_repo', repoUrl);
-    window.location.href = "http://localhost:8000/api/auth/login";
-  };
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-zinc-950 selection:bg-amber-100 flex flex-col font-sans">
@@ -24,32 +16,32 @@ export default function LandingPage() {
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-20 animate-in fade-in zoom-in-95 duration-1000">
         {/* Main Command Center Header */}
         <div className="max-w-4xl w-full space-y-4 text-center mb-16">
-          
-          <h1 className="text-6xl md:text-5xl font-black italic tracking-tighter uppercase leading-[0.8] text-zinc-950 drop-shadow-sm">
-             Code Migration <br/>
-             <span className="text-amber-500 underline decoration-zinc-950 decoration-8 underline-offset-8">Intelligence</span>
+
+          <h1 className="text-6xl md:text-5xl font-medium italic tracking-tighter uppercase leading-[0.8] text-zinc-950 drop-shadow-sm">
+            Code Migration <br />
+            <span className="text-amber-500 underline decoration-zinc-950 decoration-8 underline-offset-8">Intelligence</span>
           </h1>
         </div>
 
         {/* Industrial Action Panel */}
         <div className="w-full max-w-2xl bg-white border-2 border-zinc-950 rounded-sm shadow-[12px_12px_0px_0px_rgba(9,9,11,1)] overflow-hidden transition-all hover:shadow-[16px_16px_0px_0px_rgba(9,9,11,1)]">
           <div className="bg-zinc-950 px-6 py-2 flex items-center justify-between">
-             <span className="text-[9px] font-black uppercase tracking-widest text-white italic">Migration Entry Pipeline</span>
-             <div className="flex gap-2">
-                <div className="w-2 h-2 rounded-full bg-red-500" />
-                <div className="w-2 h-2 rounded-full bg-amber-500" />
-                <div className="w-2 h-2 rounded-full bg-emerald-500" />
-             </div>
+            <span className="text-[12px] font-medium uppercase tracking-widest text-white italic">Migration Entry Pipeline</span>
+            <div className="flex gap-2">
+              <div className="w-2 h-2 rounded-full bg-red-500" />
+              <div className="w-2 h-2 rounded-full bg-amber-500" />
+              <div className="w-2 h-2 rounded-full bg-emerald-500" />
+            </div>
           </div>
-          
+
           <div className="p-10 space-y-8">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-900">Source Repository URL</label>
-                <span className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest">Auth Required</span>
+                <label className="text-[10px] font-medium uppercase tracking-widest text-zinc-900">Source Repository URL</label>
+                <span className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest">Public Domain</span>
               </div>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 placeholder="https://github.com/org/repo"
                 value={repoUrl}
                 onChange={(e) => setRepoUrl(e.target.value)}
@@ -57,21 +49,14 @@ export default function LandingPage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-               <Button 
-                onClick={handleGitHubLogin}
-                className="h-14 text-sm font-black italic uppercase !rounded-sm tracking-widest"
-                variant="amber"
-               >
-                 {isRedirecting ? 'Redirecting...' : 'Log In With GitHub'}
-               </Button>
-               <Button 
+            <div className="flex flex-col gap-4">
+              <Button
                 onClick={() => repoUrl && router.push(`/dashboard?url=${encodeURIComponent(repoUrl)}`)}
-                className="h-14 text-sm font-black italic uppercase !rounded-sm tracking-widest"
-                variant="primary"
-               >
-                 Public Analysis
-               </Button>
+                className="h-14 text-sm font-medium italic uppercase !rounded-sm tracking-widest w-full"
+                variant="amber"
+              >
+                Public Analysis
+              </Button>
             </div>
           </div>
         </div>

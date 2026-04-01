@@ -13,7 +13,7 @@ export const IngestHero: React.FC<IngestHeroProps> = ({ onAnalyze, loading, erro
   return (
     <div className="max-w-4xl mx-auto space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="text-center space-y-6">
-        <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight uppercase italic underline decoration-black/5">
+        <h1 className="text-4xl md:text-6xl font-medium tracking-tighter leading-tight uppercase italic underline decoration-black/5">
           Code Migration <br />
           <span className="text-zinc-400">Workspace</span>
         </h1>

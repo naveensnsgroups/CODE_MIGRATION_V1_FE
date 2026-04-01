@@ -14,8 +14,8 @@ export const Button: React.FC<ButtonProps> = ({
   className = '',
   ...props
 }) => {
-  const baseStyles = "inline-flex items-center justify-center rounded-sm px-8 py-4 text-[11px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl relative overflow-hidden group";
-  
+  const baseStyles = "inline-flex items-center justify-center rounded-sm px-8 py-4 text-[11px] font-medium uppercase tracking-widest transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl relative overflow-hidden group";
+
   const variants = {
     primary: "bg-zinc-950 text-white hover:bg-black shadow-zinc-200/50",
     amber: "bg-[#facc15] text-zinc-950 hover:bg-[#eab308] shadow-yellow-200/40",
@@ -31,7 +31,7 @@ export const Button: React.FC<ButtonProps> = ({
     >
       {/* Titanium Inner Glow */}
       <span className="absolute inset-0 bg-gradient-to-tr from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-      
+
       {loading ? (
         <span className="flex items-center gap-3 relative z-10">
           <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">

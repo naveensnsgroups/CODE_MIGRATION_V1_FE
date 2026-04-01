@@ -16,25 +16,35 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
   const [analysisResults, setAnalysisResults] = useState<Record<string, string | null>>({});
   const [activeAction, setActiveAction] = useState<string>('general');
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [savedAction, setSavedAction] = useState<string | null>(null);
 
-  const saveReport = async () => {
-    const content = analysisResults[activeAction];
-    if (!content) return;
-    setIsSaving(true);
+  React.useEffect(() => {
+    const fetchSavedReports = async () => {
+      try {
+        const response = await apiClient.get(`/analysis/${data.project_id}/reports`);
+        if (response.data?.reports) {
+          const loadedResults: Record<string, string> = {};
+          response.data.reports.forEach((report: any) => {
+            loadedResults[report.action] = report.content;
+          });
+          setAnalysisResults(prev => ({ ...prev, ...loadedResults }));
+        }
+      } catch (err) {
+        console.warn('Could not load existing reports:', err);
+      }
+    };
+
+    if (data.project_id) fetchSavedReports();
+  }, [data.project_id]);
+
+  const autoSave = async (action: string, content: string) => {
     try {
       await apiClient.post(`/analysis/${data.project_id}/save`, {
-        action: activeAction,
+        action,
         content,
       });
-      setSavedAction(activeAction);
-      setTimeout(() => setSavedAction(null), 2000);
+      console.log(`[Auto-Save] ${action} finalized in DB.`);
     } catch (e) {
-      console.error('Save failed:', e);
-      alert('Failed to save report.');
-    } finally {
-      setIsSaving(false);
+      console.error('Auto-save failed:', e);
     }
   };
 
@@ -43,9 +53,16 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
       setIsAnalyzing(action);
       setActiveAction(action);
       const context = await analysisClient.getLocalContext(data.project_id);
-      // AnalysisClient now returns extracted clean text directly
+      
+      // 🚀 Trigger AI Scan
       const output = await analysisClient.analyzeWithAgent(data.project_id, context, action);
+      
+      // Update UI
       setAnalysisResults(prev => ({ ...prev, [action]: output }));
+
+      // 💾 Auto-Save to MongoDB immediately
+      autoSave(action, output);
+
     } catch (error) {
       console.error(`Analysis (${action}) failed:`, error);
       alert(`${action} scan failed. Check console for details.`);
@@ -55,10 +72,10 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
   };
 
   const actions = [
-    { id: 'general',   label: 'General Scan',       icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
-    { id: 'routes',    label: 'Map Routes',          icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-    { id: 'logic',     label: 'Logic Breakdown',     icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
-    { id: 'migration', label: 'Migration Strategy',  icon: 'M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z' },
+    { id: 'general', label: 'General Scan', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
+    { id: 'routes', label: 'Map Routes', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+    { id: 'logic', label: 'Logic Breakdown', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
+    { id: 'migration', label: 'Migration Strategy', icon: 'M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z' },
   ];
 
   return (
@@ -67,7 +84,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
       {/* ── Header Bar ── */}
       <div className="bg-white border-2 border-zinc-950 rounded-sm shadow-[6px_6px_0px_0px_rgba(9,9,11,1)] px-8 py-5 flex items-center justify-between">
         <div className="space-y-1">
-          <h2 className="text-xl font-black italic uppercase tracking-tighter text-zinc-950">
+          <h2 className="text-xl font-medium italic uppercase tracking-tighter text-zinc-950">
             Migration <span className="text-amber-500">Workbench</span>
           </h2>
           <p className="font-mono text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
@@ -75,22 +92,9 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          {analysisResults[activeAction] && (
-            <button
-              onClick={saveReport}
-              disabled={isSaving}
-              className={`px-5 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-sm border-2 transition-colors disabled:opacity-50
-                ${ savedAction === activeAction
-                  ? 'bg-emerald-500 border-emerald-500 text-white'
-                  : 'bg-amber-400 border-zinc-950 text-zinc-950 hover:bg-amber-300'
-                }`}
-            >
-              {savedAction === activeAction ? 'Saved ✓' : isSaving ? 'Saving...' : 'Save Report'}
-            </button>
-          )}
           <button
             onClick={() => window.location.reload()}
-            className="px-5 py-2.5 bg-zinc-950 text-white text-[10px] font-black uppercase tracking-widest rounded-sm hover:bg-zinc-800 transition-colors"
+            className="px-5 py-2.5 bg-zinc-950 text-white text-[10px] font-medium uppercase tracking-widest rounded-sm hover:bg-zinc-800 transition-colors"
           >
             New Session
           </button>
@@ -105,7 +109,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
           <div className="lg:col-span-7 flex flex-col h-[760px] bg-white border-2 border-zinc-950 rounded-sm shadow-[6px_6px_0px_0px_rgba(9,9,11,1)] overflow-hidden">
             {/* Panel Header */}
             <div className="bg-zinc-950 px-6 py-3 flex items-center justify-between">
-              <span className="text-[10px] font-black uppercase tracking-widest text-white italic">Source Explorer</span>
+              <span className="text-[10px] font-medium uppercase tracking-widest text-white italic">Source Explorer</span>
               <div className="flex gap-2">
                 <div className="w-2 h-2 rounded-full bg-red-500" />
                 <div className="w-2 h-2 rounded-full bg-amber-400" />
@@ -134,7 +138,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
 
           {/* Panel Header */}
           <div className="bg-zinc-950 px-6 py-3 flex items-center justify-between flex-shrink-0">
-            <span className="text-[10px] font-black uppercase tracking-widest text-white italic">Intelligence Hub</span>
+            <span className="text-[10px] font-medium uppercase tracking-widest text-white italic">Intelligence Hub</span>
             <div className="flex items-center gap-3">
               <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">
                 {data.metadata?.language || '—'} / {data.metadata?.framework || '—'}
@@ -148,11 +152,10 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
               <button
                 key={action.id}
                 onClick={() => setActiveAction(action.id)}
-                className={`flex-1 py-3 text-[9px] font-black uppercase tracking-widest transition-all border-r border-zinc-200 last:border-r-0 ${
-                  activeAction === action.id
+                className={`flex-1 py-3 text-[9px] font-medium uppercase tracking-widest transition-all border-r border-zinc-200 last:border-r-0 ${activeAction === action.id
                     ? 'bg-amber-400 text-zinc-950'
                     : 'bg-white text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'
-                }`}
+                  }`}
               >
                 {action.label.split(' ')[0]}
               </button>
@@ -164,7 +167,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
             {isAnalyzing === activeAction ? (
               <div className="h-full flex flex-col items-center justify-center gap-4">
                 <div className="w-10 h-10 border-2 border-zinc-950 border-t-amber-400 rounded-full animate-spin" />
-                <p className="text-xs font-black uppercase tracking-widest text-zinc-950 animate-pulse">Scanning Architecture...</p>
+                <p className="text-xs font-medium uppercase tracking-widest text-zinc-950 animate-pulse">Scanning Architecture...</p>
                 <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Bundling code context</p>
               </div>
             ) : analysisResults[activeAction] ? (
@@ -178,7 +181,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
                     <path d="M13 10V3L4 14h7v7l9-11h-7z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
-                <p className="text-xs font-black uppercase tracking-widest text-zinc-400">Select a scan below to begin</p>
+                <p className="text-xs font-medium uppercase tracking-widest text-zinc-400">Select a scan below to begin</p>
               </div>
             )}
           </div>
@@ -202,7 +205,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
                   <path d={action.icon} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest">{action.label}</p>
+                  <p className="text-[9px] font-medium uppercase tracking-widest">{action.label}</p>
                   <p className="text-[8px] font-bold uppercase tracking-widest opacity-60">Run Scan</p>
                 </div>
               </button>
