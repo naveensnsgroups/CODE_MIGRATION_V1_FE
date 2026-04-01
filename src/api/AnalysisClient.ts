@@ -21,18 +21,30 @@ export const analysisClient = {
       throw new Error('n8n Base Webhook URL is not configured in .env.local');
     }
 
-    // Standardize the URL by ensuring it ends with /analyse
     const fullUrl = `${N8N_BASE_URL.replace(/\/$/, '')}/analyse`;
-
     const payload = {
       project_id: projectId,
       code_context: context,
-      action: action, // Tells the n8n agent what to focus on
+      action,
       timestamp: new Date().toISOString()
     };
 
-    console.log(`Sending ${action} analysis request to n8n Agent at ${fullUrl}...`, payload);
+    console.log(`[n8n] Sending ${action} → ${fullUrl}`);
     const response = await axios.post(fullUrl, payload);
-    return response.data;
+    const raw = response.data;
+
+    console.log('[n8n] Raw response:', JSON.stringify(raw).slice(0, 300));
+
+    // Extract text from every known n8n response shape
+    const text =
+      raw?.result?.response ||            // {success, result:{response:"..."}}
+      raw?.result?.[0]?.response ||       // {success, result:[{response:"..."}]}
+      raw?.[0]?.json?.response ||          // [{json:{response:"..."}}]
+      raw?.[0]?.response ||               // [{response:"..."}]
+      raw?.output ||
+      raw?.response ||
+      (typeof raw === 'string' ? raw : JSON.stringify(raw, null, 2));
+
+    return text as string;
   }
 };

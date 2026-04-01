@@ -8,7 +8,7 @@ export const useAuth = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('github_user');
+    const savedUser = localStorage.getItem('auth_user');
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
@@ -16,14 +16,14 @@ export const useAuth = () => {
   }, []);
 
   const handleLogin = (response: AuthResponse) => {
-    localStorage.setItem('github_token', response.access_token);
-    localStorage.setItem('github_user', JSON.stringify(response.user));
+    localStorage.setItem('auth_token', response.access_token);
+    localStorage.setItem('auth_user', JSON.stringify(response.user));
     setUser(response.user);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('github_token');
-    localStorage.removeItem('github_user');
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
     setUser(null);
   };
 
@@ -35,8 +35,8 @@ export const useAuth = () => {
       const data = await response.json();
       
       if (data.access_token) {
-        localStorage.setItem('github_token', data.access_token);
-        localStorage.setItem('github_user', JSON.stringify(data.user));
+        localStorage.setItem('auth_token', data.access_token);
+        localStorage.setItem('auth_user', JSON.stringify(data.user));
         setUser(data.user);
         return data;
       }

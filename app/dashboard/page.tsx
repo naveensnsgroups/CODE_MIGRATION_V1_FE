@@ -15,18 +15,17 @@ export default function DashboardPage() {
   const autoStarted = useRef(false);
 
   useEffect(() => {
-    // Handle GitHub Code Callback
-    const code = searchParams.get('code');
-    if (code && !autoStarted.current) {
+    // Automatic Memory Trace: If we are logged in and have a target, start ingestion
+    const hasToken = localStorage.getItem('auth_token');
+    const targetRepo = localStorage.getItem('target_repo');
+    
+    if (hasToken && targetRepo && !autoStarted.current) {
       autoStarted.current = true;
-      processCallback(code).then(() => {
-        // Clean the URL without refreshing
-        const newUrl = window.location.pathname;
-        window.history.replaceState({}, '', newUrl);
-      });
+      startIngestion(targetRepo);
+      localStorage.removeItem('target_repo');
     }
 
-    // Handle Direct Analysis URL Ingestion
+    // 2. Handle Direct Link Analysis
     const urlParam = searchParams.get('url');
     if (urlParam && !autoStarted.current) {
       autoStarted.current = true;

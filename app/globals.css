@@ -7,109 +7,53 @@
   --color-border: var(--border);
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
+  --color-accent: #2563eb; 
+  --color-solar: #facc15;
 }
 
 :root {
-  --background: 210 40% 98%; /* Ash Gray #f8fafc */
-  --foreground: 240 10% 3.9%;
-  --muted: 240 3.8% 46.1%;
-  --border: 240 5.9% 90%;
-  --primary: 0 0% 0%; /* Solid Black #000000 */
-  --secondary: 0 0% 100%; /* Pure White */
-}
-
-@utility bg-background {
-  background-color: hsl(var(--background));
-}
-
-@utility text-foreground {
-  color: hsl(var(--foreground));
-}
-
-@utility text-muted {
-  color: hsl(var(--muted));
-}
-
-@utility bg-primary {
-  background-color: hsl(var(--primary));
-}
-
-@utility text-primary {
-  color: hsl(var(--primary));
-}
-
-@utility text-background {
-  color: hsl(var(--background));
-}
-
-@utility bg-secondary {
-  background-color: hsl(var(--secondary));
-}
-
-@utility border-border {
-  border-color: hsl(var(--border));
+  --background: 0 0% 100%; /* Pure White */
+  --foreground: 240 10% 4%;
+  --muted: 240 5% 50%;
+  --border: 240 6% 90%;
+  --primary: 240 10% 4%;
 }
 
 body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-family: 'Inter', system-ui, sans-serif;
+  background-color: white;
+  color: #0c0a09; /* Zinc-950 */
+  font-family: 'Inter', -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-@layer base {
-  h1 {
-    @apply text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-7xl mb-4;
-  }
-
-  h2 {
-    @apply text-2xl font-bold tracking-tight first:mt-0 uppercase font-sans;
-  }
-
-  h3 {
-    @apply text-xl font-bold tracking-tight uppercase font-sans;
-  }
-
-  p {
-    @apply leading-7 text-muted font-medium;
-  }
-
-  .glass-card {
-    @apply bg-background border border-border shadow-2xl;
-  }
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-border rounded-full hover:bg-primary transition-colors;
+  letter-spacing: -0.02em;
+  @apply selection:bg-yellow-100;
 }
 
 @layer components {
-  .glass-card {
-    @apply bg-white border border-border rounded-sm shadow-sm;
+  /* Sharp Industrial Cards: High Visibility */
+  .industrial-card {
+    @apply bg-white border-2 border-zinc-200 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] rounded-sm transition-all duration-300;
+  }
+
+  /* Professional Action Buttons: weighted */
+  .btn-industrial {
+    @apply inline-flex items-center justify-center px-8 py-4 bg-zinc-950 text-white rounded-sm font-black uppercase tracking-widest text-[10px] transition-all duration-200
+           hover:bg-black hover:scale-[1.01] active:scale-95 shadow-2xl border-b-4 border-zinc-900;
+  }
+
+  .btn-solar {
+    @apply bg-[#facc15] text-zinc-950 border-b-4 border-yellow-600 hover:bg-[#eab308] hover:border-yellow-700 shadow-yellow-100;
+  }
+
+  /* Sharp Industrial Inputs: Professional Hierarchy */
+  .input-industrial {
+    @apply bg-zinc-50 border-2 border-zinc-200 rounded-sm px-8 py-4 text-xs font-bold text-zinc-900 outline-none transition-all
+           focus:border-zinc-950 focus:bg-white placeholder:text-zinc-400 text-center shadow-sm;
   }
 }
+
+/* Elite Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { @apply bg-zinc-200 rounded-full hover:bg-zinc-400; }
+
+@keyframes slide-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.animate-slide-up { animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }

@@ -11,7 +11,8 @@ export const useIngestion = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await ingestRepository(repoUrl);
+      const token = localStorage.getItem('auth_token');
+      const response = await ingestRepository(repoUrl, token);
       setData(response);
     } catch (err: any) {
       setError(err.message || 'An error occurred during ingestion.');
