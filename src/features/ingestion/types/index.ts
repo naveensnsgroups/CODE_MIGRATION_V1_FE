@@ -12,6 +12,7 @@ export interface IngestionMetadata {
 
 export interface IngestionResponse {
   project_id: string;
+  project_name: string;
   metadata: IngestionMetadata;
   file_tree: FileNode[];
   status: string;

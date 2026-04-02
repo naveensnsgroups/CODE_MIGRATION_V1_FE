@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { FileTree } from './FileTree';
 import { IngestionResponse } from '../types';
 import { AnalysisReport } from './AnalysisReport';
+import { Zap, Route, Brain, Rocket, Loader2, Sparkles, RefreshCcw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { analysisClient } from '../../../api/AnalysisClient';
 import apiClient from '../../../api/Client';
 
@@ -72,10 +73,10 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
   };
 
   const actions = [
-    { id: 'general', label: 'General Scan', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
-    { id: 'routes', label: 'Map Routes', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-    { id: 'logic', label: 'Logic Breakdown', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
-    { id: 'migration', label: 'Migration Strategy', icon: 'M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z' },
+    { id: 'general', label: 'General Scan', icon: Zap },
+    { id: 'routes', label: 'Map Routes', icon: Route },
+    { id: 'logic', label: 'Logic Breakdown', icon: Brain },
+    { id: 'migration', label: 'Migration Strategy', icon: Rocket },
   ];
 
   return (
@@ -87,16 +88,19 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
           <h2 className="text-xl font-medium italic uppercase tracking-tighter text-zinc-950">
             Migration <span className="text-amber-500">Workbench</span>
           </h2>
-          <p className="font-mono text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-            Project ID: <span className="text-zinc-950">{data.project_id}</span>
-          </p>
+          <div className="flex items-center gap-3">
+             <p className="font-mono text-[11px] font-bold text-zinc-950 uppercase tracking-widest border-r-2 border-zinc-200 pr-3">
+              Project: <span className="text-zinc-500 ">{data.project_name}</span>
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={() => window.location.reload()}
-            className="px-5 py-2.5 bg-zinc-950 text-white text-[10px] font-medium uppercase tracking-widest rounded-sm hover:bg-zinc-800 transition-colors"
+            className="px-5 py-2.5 bg-zinc-950 text-white text-[10px] font-medium uppercase tracking-widest rounded-sm hover:bg-zinc-800 transition-all flex items-center gap-2 group"
           >
-            New Session
+            <RefreshCcw className="w-3 h-3 group-hover:rotate-180 transition-transform duration-500" />
+            New Project
           </button>
         </div>
       </div>
@@ -123,17 +127,18 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
         )}
 
         {/* Intelligence Panel */}
-        <div className={`${isExpanded ? 'lg:col-span-12' : 'lg:col-span-5'} flex flex-col h-[760px] bg-white border-2 border-zinc-950 rounded-sm shadow-[6px_6px_0px_0px_rgba(9,9,11,1)] overflow-hidden transition-all duration-500 relative`}>
+        <div className={`${isExpanded ? 'lg:col-span-12' : 'lg:col-span-5'} flex flex-col h-[760px] bg-white border-2 border-zinc-950 rounded-sm shadow-[6px_6px_0px_0px_rgba(9,9,11,1)] transition-all duration-500 relative`}>
 
-          {/* Expand Toggle */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             title={isExpanded ? 'Collapse' : 'Expand'}
-            className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-14 bg-zinc-950 text-white flex items-center justify-center rounded-l-sm z-50 hover:bg-amber-400 hover:text-zinc-950 transition-colors"
+            className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-14 bg-zinc-950 text-white flex items-center justify-center rounded-sm border-2 border-zinc-950 z-50 hover:bg-amber-400 hover:text-zinc-950 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
           >
-            <svg className={`w-3 h-3 transition-transform duration-500 ${isExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M15 19l-7-7 7-7" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            {isExpanded ? (
+              <ChevronRight className="w-4 h-4" strokeWidth={3} />
+            ) : (
+              <ChevronLeft className="w-4 h-4" strokeWidth={3} />
+            )}
           </button>
 
           {/* Panel Header */}
@@ -166,9 +171,11 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
           <div className="flex-1 overflow-y-auto p-6">
             {isAnalyzing === activeAction ? (
               <div className="h-full flex flex-col items-center justify-center gap-4">
-                <div className="w-10 h-10 border-2 border-zinc-950 border-t-amber-400 rounded-full animate-spin" />
+                <Loader2 className="w-10 h-10 text-amber-500 animate-spin" strokeWidth={1.5} />
                 <p className="text-xs font-medium uppercase tracking-widest text-zinc-950 animate-pulse">Scanning Architecture...</p>
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Bundling code context</p>
+                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
+                  <Sparkles className="w-3 h-3" /> Bundling code context
+                </p>
               </div>
             ) : analysisResults[activeAction] ? (
               <div className="prose prose-sm max-w-none">
@@ -177,9 +184,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
             ) : (
               <div className="h-full flex flex-col items-center justify-center gap-4 text-center">
                 <div className="w-14 h-14 border-2 border-zinc-200 rounded-sm flex items-center justify-center text-zinc-300">
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M13 10V3L4 14h7v7l9-11h-7z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <Sparkles className="w-7 h-7" />
                 </div>
                 <p className="text-xs font-medium uppercase tracking-widest text-zinc-400">Select a scan below to begin</p>
               </div>
@@ -198,12 +203,10 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
                   ${i < 2 ? 'border-b' : ''}
                   ${activeAction === action.id && !isAnalyzing
                     ? 'bg-amber-400 text-zinc-950'
-                    : 'bg-white hover:bg-zinc-950 hover:text-white text-zinc-900'
+                    : 'bg-white hover:bg-zinc-950 hover:text-white text-zinc-900 group'
                   }`}
               >
-                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path d={action.icon} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <action.icon className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 ${activeAction === action.id ? 'text-zinc-950' : 'text-zinc-400 group-hover:text-amber-400'}`} strokeWidth={2} />
                 <div>
                   <p className="text-[9px] font-medium uppercase tracking-widest">{action.label}</p>
                   <p className="text-[8px] font-bold uppercase tracking-widest opacity-60">Run Scan</p>
