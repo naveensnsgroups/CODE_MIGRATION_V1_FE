@@ -19,13 +19,15 @@ import { StructuredData } from './dashboard/CommonElements';
 interface AnalysisReportProps {
   content: string;
   activeAction?: string;
+  fullContext?: string | null;
 }
 
 /** Deep Clean & Parse JSON Helper */
-function cleanAndParse(raw: any): { type: 'json' | 'markdown'; data: StructuredData | string } {
+function cleanAndParse(raw: string | object | null, contextRaw?: string | null): { type: 'json' | 'markdown'; data: StructuredData | string } {
   if (!raw) return { type: 'markdown', data: '' };
 
-  const extract = (val: any): string | object => {
+  const extract = (val: any, depth = 0): any => {
+    if (depth > 2) return val; // Deep dive limit
     if (typeof val === 'object') return val;
     if (typeof val !== 'string') return String(val);
 
@@ -34,13 +36,28 @@ function cleanAndParse(raw: any): { type: 'json' | 'markdown'; data: StructuredD
     cleaned = cleaned.replace(/^```(json)?\n/i, '').replace(/\n```$/i, '');
 
     try {
-      return JSON.parse(cleaned);
+      const parsed = JSON.parse(cleaned);
+      // Recursively dive if the parsed result is still a string
+      if (typeof parsed === 'string') {
+        return extract(parsed, depth + 1);
+      }
+      return parsed;
     } catch {
       return val;
     }
   };
 
   const parsed = extract(raw);
+  
+  // 🧠 Cumulative Intelligence: If we have a context (e.g. General Scan), merge it
+  if (contextRaw && typeof parsed === 'object') {
+    const contextParsed = extract(contextRaw);
+    if (typeof contextParsed === 'object') {
+      // Surgically merge context (prioritize current parsed result)
+      const merged = { ...contextParsed, ...parsed };
+      return { type: 'json', data: merged as StructuredData };
+    }
+  }
 
   if (typeof parsed === 'object') {
     // If it's a wrapper, dive into known result fields
@@ -56,11 +73,11 @@ function cleanAndParse(raw: any): { type: 'json' | 'markdown'; data: StructuredD
   return { type: 'markdown', data: String(parsed) };
 }
 
-export const AnalysisReport: React.FC<AnalysisReportProps> = ({ content, activeAction }) => {
+export const AnalysisReport: React.FC<AnalysisReportProps> = ({ content, activeAction, fullContext }) => {
   const [viewMode, setViewMode] = useState<'pretty' | 'raw'>('pretty');
   const [copied, setCopied] = useState(false);
 
-  const { type, data } = cleanAndParse(content);
+  const { type, data } = cleanAndParse(content, fullContext);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(content);

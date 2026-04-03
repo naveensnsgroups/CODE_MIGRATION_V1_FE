@@ -317,6 +317,8 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
                 <AnalysisReport
                   content={analysisResults[activeAction] as string}
                   activeAction={activeAction}
+                  // 🧠 Cumulative Intelligence: Merge current state with general scan for high-depth context
+                  fullContext={activeAction !== 'general' ? analysisResults['general'] || null : null}
                 />
               </div>
             ) : (
