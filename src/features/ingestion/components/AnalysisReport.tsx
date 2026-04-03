@@ -37,6 +37,14 @@ function cleanAndParse(raw: string | object | null, contextRaw?: string | null):
 
     try {
       const parsed = JSON.parse(cleaned);
+      
+      // 🧪 n8n Surgical Unwrap: Detect {"items": [{"json": ...}]}
+      if (parsed && Array.isArray(parsed.items) && parsed.items.length > 0) {
+        const firstItem = parsed.items[0];
+        const payload = firstItem.json || firstItem;
+        return extract(payload, depth + 1);
+      }
+
       // Recursively dive if the parsed result is still a string
       if (typeof parsed === 'string') {
         return extract(parsed, depth + 1);
@@ -60,8 +68,8 @@ function cleanAndParse(raw: string | object | null, contextRaw?: string | null):
   }
 
   if (typeof parsed === 'object') {
-    // If it's a wrapper, dive into known result fields
-    const content = (parsed as any)?.result?.response || (parsed as any)?.response || parsed;
+    // 🧪 Deep Dive Wrapper Detection: Handle nesting variations (result.response, items[0], etc.)
+    const content = (parsed as any)?.items?.[0]?.json || (parsed as any)?.items?.[0] || (parsed as any)?.result?.response || (parsed as any)?.response || parsed;
     const finalContent = extract(content);
 
     if (typeof finalContent === 'object') {

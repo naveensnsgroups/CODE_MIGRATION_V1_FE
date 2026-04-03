@@ -73,7 +73,7 @@ export const SummaryBox: React.FC<{ summary?: string; activeAction?: string }> =
             </span>
           </div>
           {activeAction && (
-            <span className="px-2 py-0.5 bg-emerald-500 text-white text-[8px] font-bold uppercase tracking-widest rounded-sm border border-emerald-600">
+            <span className="px-2 py-0.5 bg-emerald-500 text-white text-[10px] font-semibold uppercase tracking-widest rounded-sm border border-emerald-600">
               FOCUS: {activeAction.toUpperCase()} SCAN
             </span>
           )}
