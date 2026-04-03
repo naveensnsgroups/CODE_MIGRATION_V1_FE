@@ -1,53 +1,25 @@
 "use client";
 
-import React, { useEffect, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useIngestion, IngestHero, Workbench } from '@/features/ingestion';
-import { Navbar } from '@/components/common/Navbar';
-import { useAuth } from '@/features/auth';
-import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function DashboardPage() {
-  const { data, loading, error, startIngestion } = useIngestion();
-  const { processCallback } = useAuth();
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const autoStarted = useRef(false);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Automatic Memory Trace: If we are logged in and have a target, start ingestion
-    const hasToken = localStorage.getItem('auth_token');
-    const targetRepo = localStorage.getItem('target_repo');
-    
-    if (hasToken && targetRepo && !autoStarted.current) {
-      autoStarted.current = true;
-      startIngestion(targetRepo);
-      localStorage.removeItem('target_repo');
-    }
-
-    // 2. Handle Direct Link Analysis
-    const urlParam = searchParams.get('url');
-    if (urlParam && !autoStarted.current) {
-      autoStarted.current = true;
-      startIngestion(urlParam);
-    }
-  }, [searchParams, startIngestion, processCallback]);
+    // EMERGENCY INTERCEPTION: Redirect any stray /dashboard hits back to Home (/) 
+    // while preserving all query parameters (token, code, user, etc.)
+    const params = searchParams.toString();
+    router.replace(`/${params ? '?' + params : ''}`);
+  }, [router, searchParams]);
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-foreground selection:bg-primary/10">
-      <Navbar />
-
-      <main className="max-w-[1600px] mx-auto px-6 py-12">
-        {!data ? (
-          <IngestHero 
-            onAnalyze={startIngestion} 
-            loading={loading} 
-            error={error} 
-          />
-        ) : (
-          <Workbench data={data} />
-        )}
-      </main>
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-12 h-12 border-4 border-zinc-950 border-t-amber-400 rounded-full animate-spin" />
+        <p className="text-[10px] font-black uppercase tracking-widest text-zinc-950">Redirecting to Intelligence Hub...</p>
+      </div>
     </div>
   );
 }

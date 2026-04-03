@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { exchangeCodeForToken } from '../api/GithubAuth';
 import { AuthResponse, GithubUser } from '../types';
 
@@ -15,19 +15,20 @@ export const useAuth = () => {
     setLoading(false);
   }, []);
 
-  const handleLogin = (response: AuthResponse) => {
+  const handleLogin = useCallback((response: AuthResponse) => {
     localStorage.setItem('auth_token', response.access_token);
     localStorage.setItem('auth_user', JSON.stringify(response.user));
     setUser(response.user);
-  };
+  }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_user');
     setUser(null);
-  };
+    window.location.href = "/"; // Force total refresh and clean URL
+  }, []);
 
-  const processCallback = async (code: string) => {
+  const processCallback = useCallback(async (code: string) => {
     setLoading(true);
     try {
       // Direct GET callback to backend which handles token exchange
@@ -40,18 +41,19 @@ export const useAuth = () => {
         setUser(data.user);
         return data;
       }
-    } catch (err: any) {
-      setError(err.message || 'Authentication failed');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Authentication failed');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   return {
     user,
     loading,
     error,
     processCallback,
+    handleLogin,
     handleLogout,
   };
 };

@@ -1,39 +1,9 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button } from './Button';
+import { useAuth } from '@/features/auth';
 
 export const Navbar = () => {
-  const [user, setUser] = useState<{ login: string; avatar: string } | null>(null);
-
-  useEffect(() => {
-    // Run ONCE on mount — [] dependency is the key fix.
-    // Previously [user] caused re-runs every time setUser() fired → multiple 307s.
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
-    const login = params.get('user');
-    const avatar = params.get('avatar');
-
-    if (token && login && avatar) {
-      localStorage.setItem('auth_token', token);
-      localStorage.setItem('auth_user', JSON.stringify({ login, avatar }));
-      window.history.replaceState({}, document.title, window.location.pathname);
-      setUser({ login, avatar });
-    } else {
-      const cachedUser = localStorage.getItem('auth_user');
-      if (cachedUser) {
-        setUser(JSON.parse(cachedUser));
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('auth_user');
-    setUser(null);
-    window.location.href = "/";
-  };
+  const { user, handleLogout } = useAuth();
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-white border-b border-zinc-100 shadow-xl shadow-zinc-100/80">
@@ -46,7 +16,7 @@ export const Navbar = () => {
           {user ? (
             <div className="flex items-center gap-4 animate-in fade-in slide-in-from-right-4">
               <div className="flex items-center gap-3 px-3 py-1 bg-zinc-50 border border-zinc-100 rounded-sm">
-                <img src={user.avatar} alt="Avatar" className="w-6 h-6 rounded-sm border border-zinc-200 shadow-sm" />
+                <img src={user.avatar_url} alt="Avatar" className="w-7 h-7 rounded-sm border border-zinc-200 shadow-sm" />
                 <span className="text-[10px] font-medium uppercase text-zinc-900 italic tracking-widest">{user.login}</span>
               </div>
               <Button

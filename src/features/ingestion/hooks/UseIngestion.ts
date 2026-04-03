@@ -21,10 +21,17 @@ export const useIngestion = () => {
     }
   };
 
+  const reset = () => {
+    setData(null);
+    setError(null);
+    setLoading(false);
+  };
+
   return {
     data,
     loading,
     error,
     startIngestion,
+    reset,
   };
 };
