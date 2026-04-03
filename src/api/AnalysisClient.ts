@@ -30,7 +30,8 @@ export const analysisClient = {
       'general': 'Provide a high-level summary, tech stack, and overall architecture.',
       'routes': 'SURGICAL ANALYSIS: Extract API endpoints and service imports.',
       'logic': 'SURGICAL ANALYSIS: Extract core business logic functions.',
-      'migration': 'MASTER ARCHITECT v2.2: Perform a high-depth architectural synthesis. Map legacy logic to target idioms.'
+      'migration': 'MASTER ARCHITECT v2.3: Perform a high-depth architectural synthesis. Map legacy logic to target idioms.',
+      'planner': 'EXECUTION PLANNER v2.4: Take the provided strategic roadmap (in code_context) and break it down into a step-by-step technical guide with terminal commands and file templates.'
     };
 
     const baseUrl = N8N_BASE_URL.replace(/\/$/, '');
@@ -39,6 +40,7 @@ export const analysisClient = {
     if (action === 'routes') fullUrl = `${baseUrl}/routes`;
     else if (action === 'logic') fullUrl = `${baseUrl}/logic`;
     else if (action === 'migration') fullUrl = `${baseUrl}/migration`;
+    else if (action === 'planner') fullUrl = `${baseUrl}/planner`;
 
     let guidance = guidanceHints[action] || '';
     if (action === 'migration' && stackSettings) {

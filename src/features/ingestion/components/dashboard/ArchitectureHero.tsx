@@ -5,7 +5,7 @@ import { SectionHeading, Tag, StructuredData } from './CommonElements';
 export const ArchitectureHero: React.FC<{ data: StructuredData }> = ({ data }) => {
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      
+
       {/* ── Architecture Pipeline ── */}
       {data.architecture && (
         <section>
@@ -23,13 +23,12 @@ export const ArchitectureHero: React.FC<{ data: StructuredData }> = ({ data }) =
                 {data.architecture.map((item, i) => (
                   <tr key={i} className="hover:bg-amber-50 group">
                     <td className="px-5 py-4 font-mono text-[10px] font-medium text-zinc-950 border-r border-zinc-950/5">
-                       <span className="text-amber-600 group-hover:animate-pulse mr-1">_</span>{item.file}
+                      <span className="text-amber-600 group-hover:animate-pulse mr-1">_</span>{item.file}
                     </td>
                     <td className="px-5 py-4 text-xs font-semibold text-zinc-600 border-r border-zinc-950/5">{item.purpose}</td>
                     <td className="px-5 py-4 text-center">
-                      <span className={`text-[10px] font-bold font-mono ${
-                        (item.complexity_score || 0) > 7 ? 'text-red-500' : 'text-zinc-400'
-                      }`}>
+                      <span className={`text-[10px] font-bold font-mono ${(item.complexity_score || 0) > 7 ? 'text-red-500' : 'text-zinc-400'
+                        }`}>
                         {item.complexity_score || '-'}
                       </span>
                     </td>
@@ -81,7 +80,7 @@ export const ArchitectureHero: React.FC<{ data: StructuredData }> = ({ data }) =
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="text-[11px] font-medium uppercase tracking-tight text-zinc-950 truncate">
-                         {label}
+                        {label}
                       </h4>
                       {description && description !== label && (
                         <p className="text-[11px] text-zinc-500 mt-1 font-medium leading-relaxed italic pr-2">
@@ -105,7 +104,7 @@ export const ArchitectureHero: React.FC<{ data: StructuredData }> = ({ data }) =
             <ul className="space-y-4 relative z-10">
               {data.business_rules.map((rule, i) => (
                 <li key={i} className="flex gap-4 group">
-                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-400 text-zinc-950 flex items-center justify-center text-[10px] font-black italic shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)]">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-400 text-zinc-950 flex items-center justify-center text-[10px] font-medium italic shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)]">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <p className="text-[11px] font-medium text-zinc-300 leading-relaxed group-hover:text-amber-400 transition-colors italic">

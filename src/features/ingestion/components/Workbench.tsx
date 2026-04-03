@@ -4,17 +4,17 @@ import React, { useState, useCallback } from 'react';
 import { FileTree } from './FileTree';
 import { IngestionResponse } from '../types';
 import { AnalysisReport } from './AnalysisReport';
-import { 
+import {
   Layout,
   Map as MapIcon,
   Cpu,
   Layers,
-  Loader2, 
-  Sparkles, 
-  RefreshCcw, 
-  ChevronLeft, 
-  ChevronRight, 
-  CheckCircle2 
+  Loader2,
+  Sparkles,
+  RefreshCcw,
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle2
 } from 'lucide-react';
 import { analysisClient } from '../../../api/AnalysisClient';
 import apiClient from '../../../api/Client';
@@ -41,12 +41,12 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
         response.data.reports.forEach((report: { action: string; content: string }) => {
           loadedResults[report.action] = report.content;
         });
-        
+
         setAnalysisResults(prev => ({ ...prev, ...loadedResults }));
-        
+
         // Auto-select general only if nothing is selected or if we just loaded it
         if (loadedResults['general']) {
-           setActiveAction(prev => (prev === 'general' || !prev ? 'general' : prev));
+          setActiveAction(prev => (prev === 'general' || !prev ? 'general' : prev));
         }
         console.log(`[Intelligence Hub] Synced reports from DB.`);
       }
@@ -76,14 +76,14 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
       setIsAnalyzing(action);
       setActiveAction(action);
       const context = await analysisClient.getLocalContext(data.project_id);
-      
+
       // 🧠 Cumulative Intelligence: If migration scan, gather all previous intelligence
       let previousIntelligence = '';
       if (action === 'migration') {
         const intelParts = Object.entries(analysisResults)
           .filter(([key, val]) => key !== 'migration' && val)
           .map(([key, val]) => `STAGE: ${key.toUpperCase()}\n${val}`);
-        
+
         if (intelParts.length > 0) {
           previousIntelligence = intelParts.join('\n\n---\n\n');
           console.log(`[Intelligence Hub] Bundling ${intelParts.length} previous reports for Migration Strategy`);
@@ -92,13 +92,13 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
 
       // 🚀 Trigger AI Scan
       const output = await analysisClient.analyzeWithAgent(
-        data.project_id, 
-        context, 
-        action, 
+        data.project_id,
+        context,
+        action,
         previousIntelligence,
         stackSettings
       );
-      
+
       // Update UI
       setAnalysisResults(prev => ({ ...prev, [action]: output }));
 
@@ -115,7 +115,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
   };
 
   const handleAnalyzeClick = (action: string) => {
-    if (action === 'migration' && !analysisResults[action]) {
+    if (action === 'migration') {
       setIsMigrationWizardOpen(true);
       return;
     }
@@ -132,34 +132,62 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
     executeAnalysis('migration', settings);
   };
 
+  const handleGeneratePlan = async () => {
+    try {
+      setIsAnalyzing('planner');
+      const migrationResult = analysisResults['migration'];
+      if (!migrationResult) return;
+
+      const output = await analysisClient.analyzeWithAgent(
+        data.project_id,
+        migrationResult, // 🧠 Send the Architect's roadmap as context
+        'planner'
+      );
+
+      setAnalysisResults(prev => ({ ...prev, planner: output }));
+      autoSave('planner', output);
+    } catch (e) {
+      console.error('Planner Agent failed:', e);
+    } finally {
+      setIsAnalyzing(null);
+    }
+  };
+
   const actions = [
-    { 
-      id: 'general', 
-      label: 'General Scan', 
-      icon: Layout, 
+    {
+      id: 'general',
+      label: 'General Scan',
+      icon: Layout,
       desc: 'Architecture, stack, and file map.',
       guidance: 'Perform a high-depth architectural overview. IDENTIFY the primary source language (e.g., COBOL, JCL). FORBID: Do not mention Java or Spring Boot unless specifically detected.'
     },
-    { 
-      id: 'routes', 
-      label: 'Map Routes', 
-      icon: MapIcon, 
+    {
+      id: 'routes',
+      label: 'Map Routes',
+      icon: MapIcon,
       desc: 'API endpoints and logic handlers.',
       guidance: 'MAPPING PROTOCOL: Map legacy procedure calls to API patterns. FORBID: No Spring Boot templates or Java classes.'
     },
-    { 
-      id: 'logic', 
-      label: 'Logic Breakdown', 
-      icon: Cpu, 
+    {
+      id: 'logic',
+      label: 'Logic Breakdown',
+      icon: Cpu,
       desc: 'Business rules and data flow.',
       guidance: 'LOGIC SNIPPETS: Extract business rules. FORBID: No Java classes or Spring Boot services.'
     },
-    { 
-      id: 'migration', 
-      label: 'Migration Strategy', 
-      icon: Layers, 
+    {
+      id: 'migration',
+      label: 'Migration Strategy',
+      icon: Layers,
       desc: 'Step-by-step roadmap.',
       guidance: 'MASTER ARCHITECT v2.3: Perform a high-depth architectural synthesis. Map legacy logic (COBOL/JCL) to target framework idioms.'
+    },
+    {
+      id: 'planner',
+      label: 'Execution Plan',
+      icon: Sparkles,
+      desc: 'Step-by-step commands.',
+      guidance: 'EXECUTION PLANNER v2.4: Provide tactical terminal commands and file templates based on the strategy.'
     },
   ];
 
@@ -173,12 +201,21 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
             Migration <span className="text-amber-500">Workbench</span>
           </h2>
           <div className="flex items-center gap-3">
-             <p className="font-mono text-[11px] font-bold text-zinc-950 uppercase tracking-widest border-r-2 border-zinc-200 pr-3">
+            <p className="font-mono text-[11px] font-bold text-zinc-950 uppercase tracking-widest border-r-2 border-zinc-200 pr-3">
               Project: <span className="text-zinc-500 ">{data.project_name}</span>
             </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
+          {analysisResults['migration'] && !analysisResults['planner'] && (
+            <button
+              onClick={handleGeneratePlan}
+              className="px-5 py-2.5 bg-amber-400 border-2 border-zinc-950 text-zinc-950 text-[10px] font-medium uppercase tracking-widest rounded-sm hover:bg-amber-300 transition-all flex items-center gap-2 shadow-[2px_2px_0px_0px_rgba(9,9,11,1)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5"
+            >
+              <Sparkles className="w-3 h-3" />
+              Generate Execution Plan
+            </button>
+          )}
           <button
             onClick={syncIntelligence}
             className="px-5 py-2.5 bg-white border-2 border-zinc-950 text-zinc-950 text-[10px] font-medium uppercase tracking-widest rounded-sm hover:bg-zinc-50 transition-all flex items-center gap-2 shadow-[2px_2px_0px_0px_rgba(9,9,11,1)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5"
@@ -249,15 +286,15 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
                 key={action.id}
                 onClick={() => setActiveAction(action.id)}
                 className={`flex-1 min-w-[100px] py-3 px-2 text-[9px] font-medium uppercase tracking-widest transition-all border-r border-zinc-200 last:border-r-0 flex flex-col items-center justify-center gap-0.5 ${activeAction === action.id
-                    ? 'bg-amber-400 text-zinc-950'
-                    : 'bg-white text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'
+                  ? 'bg-amber-400 text-zinc-950'
+                  : 'bg-white text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'
                   }`}
               >
                 <span>{action.label.split(' ')[0]}</span>
                 {analysisResults[action.id] && (
                   <span className="text-[7px] font-medium tracking-tighter opacity-70 flex items-center gap-1 leading-none uppercase">
-                     <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full border border-white" />
-                     Stored . Update?
+                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full border border-white" />
+                    Stored . Update?
                   </span>
                 )}
               </button>
@@ -271,14 +308,14 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
                 <Loader2 className="w-10 h-10 text-amber-500 animate-spin" strokeWidth={1.5} />
                 <p className="text-xs font-medium uppercase tracking-widest text-zinc-950 animate-pulse">Scanning Architecture...</p>
                 <div className="flex items-center gap-2 px-3 py-1 bg-zinc-50 border border-zinc-200 rounded-full">
-                   <Sparkles className="w-3 h-3 text-amber-500" />
-                   <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">Bundling surgical context</span>
+                  <Sparkles className="w-3 h-3 text-amber-500" />
+                  <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">Bundling surgical context</span>
                 </div>
               </div>
             ) : analysisResults[activeAction] ? (
               <div className="animate-in fade-in duration-500">
-                <AnalysisReport 
-                  content={analysisResults[activeAction] as string} 
+                <AnalysisReport
+                  content={analysisResults[activeAction] as string}
                   activeAction={activeAction}
                 />
               </div>
@@ -334,7 +371,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
       </div>
 
       {/* 🔮 Intelligence Confirmation Modal */}
-      <ConfirmationModal 
+      <ConfirmationModal
         isOpen={!!showRerunModal}
         onClose={() => setShowRerunModal(null)}
         onConfirm={() => executeAnalysis(showRerunModal!)}
@@ -342,7 +379,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
         message={`Deep surgical data for ${showRerunModal?.toUpperCase()} already exists in the intelligence hub. Do you want to run a fresh scan to update it?`}
       />
 
-      <MigrationWizard 
+      <MigrationWizard
         isOpen={isMigrationWizardOpen}
         onClose={() => setIsMigrationWizardOpen(false)}
         onConfirm={handleMigrationConfirm}

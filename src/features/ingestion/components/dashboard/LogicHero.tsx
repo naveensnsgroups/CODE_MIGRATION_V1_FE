@@ -46,7 +46,7 @@ export const LogicHero: React.FC<{ rules?: StructuredData['business_rules']; uni
             <ul className="space-y-4 relative z-10">
               {rules.map((rule, i) => (
                 <li key={i} className="flex gap-4 group">
-                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-400 text-zinc-950 flex items-center justify-center text-[10px] font-black italic shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)]">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-400 text-zinc-950 flex items-center justify-center text-[10px] font-medium italic shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)]">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <p className="text-[11px] font-medium text-zinc-300 leading-relaxed group-hover:text-amber-400 transition-colors italic">
