@@ -17,11 +17,14 @@ export default function LandingPage() {
   const searchParams = useSearchParams();
   const autoStarted = useRef(false);
 
-  // Atomic Logout Reset: If user becomes null, clear analysis data
+  const prevUser = useRef(user);
+
+  // Atomic Logout Reset: ONLY clear data if we transitioned from Logged In -> Logged Out
   useEffect(() => {
-    if (!user) {
+    if (prevUser.current && !user) {
       reset();
     }
+    prevUser.current = user;
   }, [user, reset]);
 
   useEffect(() => {
