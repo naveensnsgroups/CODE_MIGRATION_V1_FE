@@ -77,7 +77,7 @@ export default function LandingPage() {
           <div className="max-w-[1600px] mx-auto w-full flex flex-col items-center">
             {/* Main Command Center Header */}
             <div className="max-w-4xl w-full space-y-4 text-center mb-12">
-              <h1 className="text-5xl md:text-5xl font-black italic tracking-tighter uppercase leading-[0.8] text-zinc-950 drop-shadow-sm">
+              <h1 className="text-5xl md:text-5xl font-medium italic tracking-tighter uppercase leading-[0.8] text-zinc-950 drop-shadow-sm">
                 Code Migration <br />
                 <span className="text-amber-500 underline decoration-zinc-950 decoration-[12px] underline-offset-[16px]">Intelligence</span>
               </h1>
@@ -116,9 +116,9 @@ export default function LandingPage() {
                       <div className="flex items-center justify-between px-2">
                         <div className="flex items-center gap-3">
                            <img src={user.avatar_url} alt={user.login} className="w-10 h-10 border-2 border-zinc-950 rounded-sm shadow-[3px_3px_0px_0px_rgba(251,191,36,1)]" />
-                           <p className="text-[10px] font-black uppercase tracking-widest text-zinc-950 italic">Connected as {user.login}</p>
+                           <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-950 italic">Connected as {user.login}</p>
                         </div>
-                        <button onClick={handleLogout} className="text-[8px] font-black uppercase tracking-widest text-zinc-300 hover:text-red-500 transition-colors">Disconnect</button>
+                        <button onClick={handleLogout} className="text-[10px] font-medium uppercase tracking-widest text-zinc-400 hover:text-red-500 transition-colors">Disconnect</button>
                       </div>
 
                       <div 
@@ -126,8 +126,8 @@ export default function LandingPage() {
                         className="p-12 border-4 border-dashed border-zinc-100 rounded-sm flex flex-col items-center justify-center text-center group hover:border-amber-400 transition-colors cursor-pointer bg-zinc-50/50"
                       >
                          <svg className="w-10 h-10 text-zinc-200 mb-4 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                         <p className="text-[12px] font-black uppercase tracking-[0.2em] text-zinc-400 group-hover:text-zinc-950">Select From My Repositories</p>
-                         <span className="text-[9px] font-bold text-zinc-300 mt-2 uppercase tracking-widest">Private & Public Access Active</span>
+                         <p className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 group-hover:text-zinc-950">Select From My Repositories</p>
+                         <span className="text-[11px] font-semibold text-zinc-400 mt-2 uppercase tracking-widest">Private & Public Access Active</span>
                       </div>
                    </div>
                 )}
@@ -165,7 +165,7 @@ export default function LandingPage() {
             </div>
 
             {error && (
-              <div className="mt-8 max-w-2xl w-full p-4 rounded-sm bg-red-50 border border-red-200 text-red-600 text-[10px] font-black text-center uppercase tracking-widest animate-shake">
+              <div className="mt-8 max-w-2xl w-full p-4 rounded-sm bg-red-50 border border-red-200 text-red-600 text-[10px] font-medium text-center uppercase tracking-widest animate-shake">
                 {error}
               </div>
             )}

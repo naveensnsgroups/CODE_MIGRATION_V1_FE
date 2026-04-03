@@ -104,7 +104,7 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
               placeholder="Search your repositories..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white border-2 border-zinc-200 rounded-sm pl-12 pr-4 py-3 text-[10px] font-bold uppercase tracking-widest focus:border-zinc-950 outline-none transition-all"
+              className="w-full bg-white border-2 border-zinc-200 rounded-sm pl-12 pr-4 py-3 text-[10px] font-semibold uppercase tracking-widest focus:border-zinc-950 outline-none transition-all"
             />
           </div>
         </div>
@@ -114,16 +114,16 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 space-y-4">
               <Loader2 className="animate-spin text-amber-500" size={32} />
-              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Fetching Intelligence...</p>
+              <p className="text-[11px] font-medium uppercase tracking-widest text-zinc-500">Fetching Intelligence...</p>
             </div>
           ) : error ? (
             <div className="p-8 text-center space-y-4">
-              <p className="text-xs font-bold text-red-500 uppercase">{error}</p>
+              <p className="text-[11px] font-semibold text-red-500 uppercase">{error}</p>
               <Button onClick={fetchRepos} className="px-6">Retry Connection</Button>
             </div>
           ) : filteredRepos.length === 0 ? (
             <div className="py-20 text-center">
-              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">No repositories found matching &quot;{search}&quot;</p>
+              <p className="text-[11px] font-medium uppercase tracking-widest text-zinc-500">No repositories found matching &quot;{search}&quot;</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-2">
@@ -138,14 +138,14 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
                       {repo.private ? <Lock size={14} /> : <Globe size={14} />}
                     </div>
                     <div>
-                      <h3 className="text-[11px] font-black uppercase tracking-tighter text-zinc-950 group-hover:text-amber-500 transition-colors">
+                      <h3 className="text-[11px] font-medium uppercase tracking-tighter text-zinc-950 group-hover:text-amber-500 transition-colors">
                         {repo.name}
                       </h3>
                       <div className="flex items-center gap-3 mt-1">
-                        <span className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest">
+                        <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-widest">
                           {repo.language || 'Documentation'}
                         </span>
-                        <span className="text-[8px] font-medium text-zinc-300 uppercase tracking-widest">
+                        <span className="text-[9px] font-medium text-zinc-500 uppercase tracking-widest">
                           Updated {new Date(repo.updated_at).toLocaleDateString()}
                         </span>
                       </div>
@@ -160,14 +160,14 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
 
         {/* ── Footer ── */}
         <div className="px-8 py-4 bg-zinc-50 border-t-2 border-zinc-100 flex items-center justify-between">
-          <p className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest">
+          <p className="text-[8px] font-semibold text-zinc-400 uppercase tracking-widest">
             {filteredRepos.length} Repositories Available
           </p>
           <button 
             onClick={fetchRepos}
             disabled={loading}
             title="Refresh repository list"
-            className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-zinc-500 hover:text-zinc-950 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 text-[8px] font-medium uppercase tracking-widest text-zinc-500 hover:text-zinc-950 transition-colors disabled:opacity-50"
           >
             <RefreshCw size={10} className={loading ? 'animate-spin' : ''} />
             Refresh
