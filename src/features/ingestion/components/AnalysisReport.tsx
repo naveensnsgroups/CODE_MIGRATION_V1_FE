@@ -55,27 +55,34 @@ function cleanAndParse(raw: string | object | null, contextRaw?: string | null):
     }
   };
 
-  const parsed = extract(raw);
+  // 1. Initial Parse & Unwrap
+  let parsed = extract(raw);
   
-  // 🧠 Cumulative Intelligence: If we have a context (e.g. General Scan), merge it
+  // 🧪 Surgical Unwrap: Deep Dive into n8n results (items, result, response)
+  if (parsed && typeof parsed === 'object') {
+    parsed = (parsed as any)?.items?.[0]?.json || 
+             (parsed as any)?.items?.[0] || 
+             (parsed as any)?.result?.response || 
+             (parsed as any)?.result || 
+             (parsed as any)?.response || 
+             parsed;
+    
+    // Recursive extraction if still a string
+    parsed = extract(parsed);
+  }
+
+  // 2. 🧠 Cumulative Intelligence Merge
   if (contextRaw && typeof parsed === 'object') {
     const contextParsed = extract(contextRaw);
     if (typeof contextParsed === 'object') {
-      // Surgically merge context (prioritize current parsed result)
-      const merged = { ...contextParsed, ...parsed };
-      return { type: 'json', data: merged as StructuredData };
+      // Merge context, but prioritize CURRENT mission segments
+      parsed = { ...contextParsed, ...parsed };
     }
   }
 
-  if (typeof parsed === 'object') {
-    // 🧪 Deep Dive Wrapper Detection: Handle nesting variations (result.response, items[0], etc.)
-    const content = (parsed as any)?.items?.[0]?.json || (parsed as any)?.items?.[0] || (parsed as any)?.result?.response || (parsed as any)?.response || parsed;
-    const finalContent = extract(content);
-
-    if (typeof finalContent === 'object') {
-      return { type: 'json', data: finalContent as StructuredData };
-    }
-    return { type: 'markdown', data: String(finalContent) };
+  // 3. Final Content Validation
+  if (parsed && typeof parsed === 'object') {
+    return { type: 'json', data: parsed as StructuredData };
   }
 
   return { type: 'markdown', data: String(parsed) };

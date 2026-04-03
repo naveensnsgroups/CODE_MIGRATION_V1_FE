@@ -20,7 +20,7 @@ export const ReportDashboard: React.FC<ReportDashboardProps> = ({ data, activeAc
       {activeAction === 'routes' || activeAction === 'map' ? (
         <RoutesHero data={data} />
       ) : activeAction === 'logic' ? (
-        <LogicHero rules={data.business_rules} units={(data as any).logic_units} />
+        <LogicHero data={data} />
       ) : activeAction === 'migration' ? (
         <MigrationHero data={data} />
       ) : activeAction === 'general' ? (
@@ -30,7 +30,7 @@ export const ReportDashboard: React.FC<ReportDashboardProps> = ({ data, activeAc
         <>
           <ArchitectureHero data={data} />
           <RoutesHero data={data} />
-          <LogicHero rules={data.business_rules} />
+          <LogicHero data={data} />
         </>
       )}
     </div>

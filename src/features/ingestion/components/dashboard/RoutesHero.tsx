@@ -4,8 +4,8 @@ import { SectionHeading, StructuredData } from './CommonElements';
 
 export const RoutesHero: React.FC<{ data: StructuredData }> = ({ data }) => {
   const routes = data.routes || [];
-  const logicUnits = (data as any).logic_units || [];
-  const dataAccess = (data as any).data_access || [];
+  const logicUnits = data.logic_units || [];
+  const dataAccess = data.data_access || [];
 
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">

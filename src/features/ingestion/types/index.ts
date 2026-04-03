@@ -15,5 +15,6 @@ export interface IngestionResponse {
   project_name: string;
   metadata: IngestionMetadata;
   file_tree: FileNode[];
+  reports?: Record<string, any>;
   status: string;
 }

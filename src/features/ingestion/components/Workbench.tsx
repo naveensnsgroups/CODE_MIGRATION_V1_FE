@@ -53,11 +53,29 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
     } catch (err) {
       console.warn('Could not sync intelligence hub:', err);
     }
-  }, [data.project_id]); // ⚡ Removed analysisResults to break the infinite loop
+  }, [data.project_id]);
 
   React.useEffect(() => {
-    if (data.project_id) syncIntelligence();
-  }, [data.project_id, syncIntelligence]);
+    // Phase 1: High-Depth Hydration from Ingest Payload (Instant Sync)
+    if (data.reports && Object.keys(data.reports).length > 0) {
+      console.log(`[Intelligence Hub] Instant Hydration: Processing mission segments.`);
+      const loadedResults: Record<string, string> = {};
+      Object.entries(data.reports).forEach(([action, content]) => {
+        loadedResults[action] = typeof content === 'string' ? content : JSON.stringify(content);
+      });
+      
+      setAnalysisResults(loadedResults);
+      
+      // Auto-focus on general if it exists and we are at the default state
+      if (loadedResults['general'] && activeAction === 'general') {
+        setActiveAction('general');
+      }
+    } else if (data.project_id) {
+      // Phase 2: Manual Sync Fallback (Only if no reports in initial payload)
+      syncIntelligence();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.project_id, data.reports]); // Keep dependencies stable: data.reports change handles hydration.
 
   const autoSave = async (action: string, content: string) => {
     try {

@@ -26,6 +26,36 @@ export interface StructuredData {
     complexity: number;
     migration_strategy: string;
   }>;
+  data_access?: Array<{
+    operation: string;
+    source: string;
+    description: string;
+  }>;
+  backend?: Array<{
+    file_name: string;
+    endpoints: Array<{
+      endpoint: string;
+      method: string;
+      function_name: string;
+      description: string;
+      input: string[];
+      output: string[];
+      flow: string[];
+      business_rules: string[];
+    }>;
+  }>;
+  frontend?: Array<{
+    page_name: string;
+    file_name: string;
+    inputs: string[];
+    api_calls: Array<{
+      endpoint: string;
+      method: string;
+      purpose: string;
+    }>;
+    user_actions: string[];
+    response_handling: string[];
+  }>;
   target_stack?: {
     backend: string;
     framework: string;
