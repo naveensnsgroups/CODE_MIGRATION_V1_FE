@@ -7,6 +7,7 @@ import { Button } from '@/components/common/Button';
 import { useIngestion, Workbench } from '@/features/ingestion';
 import { useAuth } from '@/features/auth';
 import { RepoSelector } from '@/features/ingestion/components/RepoSelector';
+import { PrivateRepoModal } from '@/features/ingestion/components/modals/PrivateRepoModal';
 
 export default function LandingPage() {
   const { data, loading, error, startIngestion, reset } = useIngestion();
@@ -16,7 +17,6 @@ export default function LandingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const autoStarted = useRef(false);
-
   const prevUser = useRef(user);
 
   // Atomic Logout Reset: ONLY clear data if we transitioned from Logged In -> Logged Out
@@ -187,6 +187,12 @@ export default function LandingPage() {
           startIngestion(repoUrl);
           setIsSelectorOpen(false);
         }}
+      />
+
+      <PrivateRepoModal 
+        isOpen={error === "PRIVATE_REPOSITORY"}
+        onClose={reset}
+        repoUrl={repoUrl}
       />
     </div>
   );
