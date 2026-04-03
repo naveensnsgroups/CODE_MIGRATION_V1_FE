@@ -38,7 +38,7 @@ export default function LandingPage() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <label className="text-[10px] font-medium uppercase tracking-widest text-zinc-900">Source Repository URL</label>
-                <span className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest">Public Domain</span>
+                <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">Public Domain</span>
               </div>
               <input
                 type="text"

@@ -13,23 +13,12 @@ import {
   CheckCircle2,
   ListTodo
 } from 'lucide-react';
+import { ReportDashboard } from './dashboard/ReportDashboard';
+import { StructuredData } from './dashboard/CommonElements';
 
 interface AnalysisReportProps {
   content: string;
-}
-
-/** Structured Data Types */
-interface StructuredData {
-  summary?: string;
-  tech_stack?: {
-    frontend?: string[];
-    backend?: string[];
-    statics?: string[];
-  };
-  architecture?: Array<{ file: string; purpose: string }>;
-  core_features?: Array<{ label: string; desc: string }>;
-  business_rules?: string[];
-  routes?: Array<{ path: string; method: string; desc: string }>;
+  activeAction?: string;
 }
 
 /** Deep Clean & Parse JSON Helper */
@@ -67,148 +56,7 @@ function cleanAndParse(raw: any): { type: 'json' | 'markdown'; data: StructuredD
   return { type: 'markdown', data: String(parsed) };
 }
 
-const Tag: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <span className="px-2 py-0.5 bg-zinc-950 text-white text-[9px] font-medium uppercase tracking-widest rounded-sm border-2 border-zinc-950 shadow-[2px_2px_0px_0px_rgba(251,191,36,1)] transition-transform hover:-translate-y-0.5">
-    {children}
-  </span>
-);
-
-const SectionHeading: React.FC<{ icon: React.ReactNode; title: string }> = ({ icon, title }) => (
-  <div className="flex items-center gap-3 mb-6">
-    <div className="w-8 h-8 rounded-sm bg-zinc-950 text-amber-400 flex items-center justify-center border-2 border-zinc-950 shadow-[3px_3px_0px_0px_rgba(228,228,231,1)]">
-      {icon}
-    </div>
-    <h3 className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-950 italic border-b-4 border-amber-400 pb-0.5 leading-none">
-      {title}
-    </h3>
-  </div>
-);
-
-const StructuredReport: React.FC<{ data: StructuredData }> = ({ data }) => {
-  return (
-    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-1000">
-
-      {/* ── Industrial Summary ── */}
-      {data.summary && (
-        <div className="relative group">
-          <div className="absolute inset-0 bg-amber-400 -rotate-1 rounded-sm opacity-10 group-hover:opacity-20 transition-opacity" />
-          <div className="relative bg-zinc-50 border-2 border-zinc-950 p-6 rounded-sm shadow-[6px_6px_0px_0px_rgba(39,39,42,1)]">
-            <p className="text-sm font-bold leading-relaxed text-zinc-900 border-l-4 border-amber-400 pl-4">
-              {data.summary}
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* ── Architecture Pipeline ── */}
-      {data.architecture && (
-        <section>
-          <SectionHeading icon={<Layers size={14} strokeWidth={3} />} title="Architecture Pipeline" />
-          <div className="border-2 border-zinc-950 rounded-sm overflow-hidden bg-white shadow-[6px_6px_0px_0px_rgba(228,228,231,1)]">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-zinc-950 text-white">
-                  <th className="px-5 py-3 text-[9px] font-medium uppercase tracking-widest italic border-r border-zinc-800">File Logic</th>
-                  <th className="px-5 py-3 text-[9px] font-medium uppercase tracking-widest italic">Core Mission</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y-2 divide-zinc-950/5">
-                {data.architecture.map((item, i) => (
-                  <tr key={i} className="hover:bg-amber-50 group">
-                    <td className="px-5 py-4 font-mono text-[10px] font-medium text-zinc-950 border-r border-zinc-950/5">
-                      <span className="text-amber-600 group-hover:animate-pulse">_</span>{item.file}
-                    </td>
-                    <td className="px-5 py-4 text-xs font-semibold text-zinc-600">{item.purpose}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      )}
-
-      {/* ── Tech Stack Reactor ── */}
-      {data.tech_stack && (
-        <section>
-          <SectionHeading icon={<Cpu size={14} strokeWidth={3} />} title="Stack Intelligence" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {Object.entries(data.tech_stack).map(([key, tags]) => (
-              tags && tags.length > 0 && (
-                <div key={key} className="p-5 bg-white border-2 border-zinc-200 rounded-sm hover:border-zinc-950 transition-colors group">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-[10px] font-medium uppercase tracking-[0.15em] text-zinc-400 group-hover:text-zinc-950 transition-colors">{key} Layers</span>
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    {tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
-                  </div>
-                </div>
-              )
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ── Core Modules (Staggered Grid) ── */}
-      {data.core_features && (
-        <section>
-          <SectionHeading icon={<Zap size={14} strokeWidth={3} />} title="Functional Modules" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {data.core_features.map((feature, i) => (
-              <div key={i} className="group p-5 bg-white border-2 border-zinc-950 rounded-sm shadow-[0px_4px_0px_0px_rgba(9,9,11,1)] hover:shadow-none hover:translate-y-[4px] transition-all relative overflow-hidden">
-                <div className="absolute -top-6 -right-6 w-12 h-12 bg-amber-400 rotate-45 transform transition-transform group-hover:scale-150" />
-                <div className="relative z-10 flex gap-4">
-                  <div className="h-10 w-10 shrink-0 bg-zinc-950 text-white rounded-sm flex items-center justify-center group-hover:bg-amber-400 group-hover:text-zinc-950 transition-colors">
-                    <CheckCircle2 size={18} strokeWidth={3} />
-                  </div>
-                  <div>
-                    <h4 className="text-[11px] font-medium uppercase tracking-tight text-zinc-950">{feature.label}</h4>
-                    <p className="text-xs text-zinc-500 mt-1 font-bold leading-relaxed">{feature.desc}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ── Mapped Interfaces ── */}
-      {data.routes && (
-        <section>
-          <SectionHeading icon={<Map size={14} strokeWidth={3} />} title="Interface Map" />
-          <div className="space-y-3 bg-zinc-950 p-6 rounded-sm">
-            {data.routes.map((route, i) => (
-              <div key={i} className="flex items-center justify-between group border-b border-zinc-800 pb-3 last:border-0 last:pb-0">
-                <div className="flex items-center gap-4">
-                  <span className="font-mono text-[10px] font-medium text-amber-400 uppercase tracking-widest w-12">{route.method}</span>
-                  <span className="font-mono text-xs font-medium text-white group-hover:text-amber-400 transition-colors">{route.path}</span>
-                </div>
-                <span className="text-[9px] font-medium uppercase tracking-widest text-zinc-500 group-hover:text-zinc-300 transition-colors">&gt;&gt; {route.desc}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ── Logic Flow ── */}
-      {data.business_rules && (
-        <section>
-          <SectionHeading icon={<ListTodo size={14} strokeWidth={3} />} title="Logic Constraints" />
-          <div className="grid grid-cols-1 gap-2">
-            {data.business_rules.map((rule, i) => (
-              <div key={i} className="flex items-start gap-4 p-3 bg-white border border-zinc-100 rounded-sm hover:border-zinc-300 transition-all">
-                <span className="text-[10px] font-medium text-amber-500 font-mono">0{i + 1}</span>
-                <p className="text-xs font-bold text-zinc-700 leading-tight uppercase tracking-tight">{rule}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-    </div>
-  );
-};
-
-export const AnalysisReport: React.FC<AnalysisReportProps> = ({ content }) => {
+export const AnalysisReport: React.FC<AnalysisReportProps> = ({ content, activeAction }) => {
   const [viewMode, setViewMode] = useState<'pretty' | 'raw'>('pretty');
   const [copied, setCopied] = useState(false);
 
@@ -254,7 +102,7 @@ export const AnalysisReport: React.FC<AnalysisReportProps> = ({ content }) => {
       <div className="flex-1">
         {viewMode === 'pretty' ? (
           type === 'json' ? (
-            <StructuredReport data={data as StructuredData} />
+            <ReportDashboard data={data as StructuredData} activeAction={activeAction} />
           ) : (
             <div className="prose prose-zinc prose-sm max-w-none">
               <ReactMarkdown
