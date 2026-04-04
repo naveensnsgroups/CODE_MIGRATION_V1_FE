@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { FileTree } from './FileTree';
+import { CodeViewer } from './CodeViewer';
 import { IngestionResponse } from '../types';
 import { AnalysisReport } from './AnalysisReport';
 import {
@@ -14,7 +15,9 @@ import {
   RefreshCcw,
   ChevronLeft,
   ChevronRight,
-  CheckCircle2
+  CheckCircle2,
+  ChevronUp,
+  ChevronDown
 } from 'lucide-react';
 import { analysisClient } from '../../../api/AnalysisClient';
 import apiClient from '../../../api/Client';
@@ -32,6 +35,8 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showRerunModal, setShowRerunModal] = useState<string | null>(null);
   const [isMigrationWizardOpen, setIsMigrationWizardOpen] = useState(false);
+  const [selectedFilePath, setSelectedFilePath] = useState<string | null>(null);
+  const [isActionsCollapsed, setIsActionsCollapsed] = useState(false);
 
   const syncIntelligence = useCallback(async () => {
     try {
@@ -254,26 +259,39 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
       {/* ── Main Grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-        {/* File Explorer */}
+        {/* File Explorer / Code Viewer */}
         {!isExpanded && (
-          <div className="lg:col-span-7 flex flex-col h-[760px] bg-white border-2 border-zinc-950 rounded-sm shadow-[6px_6px_0px_0px_rgba(9,9,11,1)] overflow-hidden">
-            {/* Panel Header */}
-            <div className="bg-zinc-950 px-6 py-3 flex items-center justify-between">
-              <span className="text-[10px] font-medium uppercase tracking-widest text-white italic">Source Explorer</span>
-              <div className="flex gap-2">
-                <div className="w-2 h-2 rounded-full bg-red-500" />
-                <div className="w-2 h-2 rounded-full bg-amber-400" />
-                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+          <div className="lg:col-span-7 flex flex-col h-[860px]">
+            {selectedFilePath ? (
+              <CodeViewer 
+                projectId={data.project_id} 
+                filePath={selectedFilePath} 
+                onClose={() => setSelectedFilePath(null)} 
+              />
+            ) : (
+              <div className="flex flex-col h-full bg-white border-2 border-zinc-950 rounded-sm shadow-[6px_6px_0px_0px_rgba(9,9,11,1)] overflow-hidden">
+                {/* Panel Header */}
+                <div className="bg-zinc-950 px-6 py-3 flex items-center justify-between">
+                  <span className="text-[10px] font-medium uppercase tracking-widest text-white italic">Source Explorer</span>
+                  <div className="flex gap-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                    <div className="w-2 h-2 rounded-full bg-amber-400" />
+                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  </div>
+                </div>
+                <div className="flex-1 overflow-y-auto p-4 scroller-industrial">
+                  <FileTree 
+                    tree={data.file_tree} 
+                    onFileClick={(path) => setSelectedFilePath(path)} 
+                  />
+                </div>
               </div>
-            </div>
-            <div className="flex-1 overflow-y-auto p-4">
-              <FileTree tree={data.file_tree} />
-            </div>
+            )}
           </div>
         )}
 
         {/* Intelligence Panel */}
-        <div className={`${isExpanded ? 'lg:col-span-12' : 'lg:col-span-5'} flex flex-col h-[760px] bg-white border-2 border-zinc-950 rounded-sm shadow-[6px_6px_0px_0px_rgba(9,9,11,1)] transition-all duration-500 relative`}>
+        <div className={`${isExpanded ? 'lg:col-span-12' : 'lg:col-span-5'} flex flex-col h-[860px] bg-white border-2 border-zinc-950 rounded-sm shadow-[6px_6px_0px_0px_rgba(9,9,11,1)] transition-all duration-500 relative`}>
 
           <button
             onClick={() => setIsExpanded(!isExpanded)}
@@ -352,41 +370,53 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
             )}
           </div>
 
-          {/* Action Buttons (Bottom Grid) */}
-          <div className="border-t-2 border-zinc-950 grid grid-cols-2 flex-shrink-0">
-            {actions.map((action, i) => {
-              const worksExist = !!analysisResults[action.id];
-              return (
-                <button
-                  key={action.id}
-                  onClick={() => handleAnalyzeClick(action.id)}
-                  disabled={!!isAnalyzing}
-                  className={`py-4 px-4 flex items-center gap-3 text-left transition-all border-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed
-                    ${i % 2 === 0 ? 'border-r' : ''}
-                    ${i < 2 ? 'border-b' : ''}
-                    ${activeAction === action.id && !isAnalyzing
-                      ? 'bg-amber-400 text-zinc-950'
-                      : 'bg-white hover:bg-zinc-950 hover:text-white text-zinc-900 group'
-                    }`}
-                >
-                  <div className="relative">
-                    <action.icon className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 ${activeAction === action.id ? 'text-zinc-950' : 'text-zinc-400 group-hover:text-amber-400'}`} strokeWidth={2} />
-                    {worksExist && (
-                      <div className="absolute -top-1.5 -right-1.5 bg-emerald-500 rounded-full border border-white">
-                        <CheckCircle2 size={10} className="text-white" strokeWidth={4} />
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-[9px] font-medium uppercase tracking-widest leading-none mb-1">{action.label}</p>
-                    <p className="text-[8px] font-bold uppercase tracking-widest opacity-60 leading-none">
-                      {worksExist ? 'Stored . Update?' : 'Initiate Scan'}
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
+          {/* ── Action Dock Control (v10.0) ── */}
+          <div className="relative border-t-2 border-zinc-950 flex justify-center flex-shrink-0">
+            <button
+               onClick={() => setIsActionsCollapsed(!isActionsCollapsed)}
+               title={isActionsCollapsed ? "Expand Mission Control" : "Collapse Mission Control"}
+               className="absolute -top-4 w-8 h-8 rounded-full bg-zinc-950 border-2 border-zinc-950 text-white flex items-center justify-center hover:bg-amber-400 hover:text-zinc-950 transition-all shadow-[2px_2px_0px_0px_rgba(9,9,11,1)] z-[60]"
+            >
+              {isActionsCollapsed ? <ChevronUp size={16} strokeWidth={3} /> : <ChevronDown size={16} strokeWidth={3} />}
+            </button>
           </div>
+
+          {!isActionsCollapsed && (
+            <div className="grid grid-cols-2 flex-shrink-0 animate-in slide-in-from-bottom-4 duration-300">
+              {actions.map((action, i) => {
+                const worksExist = !!analysisResults[action.id];
+                return (
+                  <button
+                    key={action.id}
+                    onClick={() => handleAnalyzeClick(action.id)}
+                    disabled={!!isAnalyzing}
+                    className={`py-4 px-4 flex items-center gap-3 text-left transition-all border-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed
+                      ${i % 2 === 0 ? 'border-r' : ''}
+                      ${i < 2 ? 'border-b' : ''}
+                      ${activeAction === action.id && !isAnalyzing
+                        ? 'bg-amber-400 text-zinc-950'
+                        : 'bg-white hover:bg-zinc-950 hover:text-white text-zinc-900 group'
+                      }`}
+                  >
+                    <div className="relative">
+                      <action.icon className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 ${activeAction === action.id ? 'text-zinc-950' : 'text-zinc-400 group-hover:text-amber-400'}`} strokeWidth={2} />
+                      {worksExist && (
+                        <div className="absolute -top-1.5 -right-1.5 bg-emerald-500 rounded-full border border-white">
+                          <CheckCircle2 size={10} className="text-white" strokeWidth={4} />
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-medium uppercase tracking-widest leading-none mb-1">{action.label}</p>
+                      <p className="text-[8px] font-bold uppercase tracking-widest opacity-60 leading-none">
+                        {worksExist ? 'Stored . Update?' : 'Initiate Scan'}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 

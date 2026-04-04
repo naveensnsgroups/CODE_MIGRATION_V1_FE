@@ -5,15 +5,25 @@ import { FileNode } from '../types';
 
 interface FileTreeProps {
   tree: FileNode[];
+  onFileClick?: (path: string) => void;
 }
 
-const FileTreeNode: React.FC<{ node: FileNode; depth: number }> = ({ node, depth }) => {
+const FileTreeNode: React.FC<{ 
+  node: FileNode; 
+  depth: number; 
+  path: string;
+  onFileClick?: (path: string) => void;
+}> = ({ node, depth, path, onFileClick }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const currentPath = path ? `${path}/${node.name}` : node.name;
 
   if (node.type === 'file') {
     return (
-      <div className="flex items-center gap-3 py-2 pl-3 hover:bg-zinc-50 transition-colors cursor-default group border-l-2 border-transparent hover:border-blue-500">
-        <svg className="w-4 h-4 text-zinc-400 group-hover:text-blue-600 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div 
+        onClick={() => onFileClick?.(currentPath)}
+        className="flex items-center gap-3 py-2 pl-3 hover:bg-zinc-50 transition-colors cursor-pointer group border-l-2 border-transparent hover:border-amber-500"
+      >
+        <svg className="w-4 h-4 text-zinc-400 group-hover:text-amber-600 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
         <span className="text-sm font-semibold text-zinc-700 tracking-tight truncate">{node.name}</span>
@@ -24,7 +34,7 @@ const FileTreeNode: React.FC<{ node: FileNode; depth: number }> = ({ node, depth
   return (
     <div className="">
       <div
-        className="flex items-center gap-3 py-2 cursor-pointer hover:bg-zinc-50 transition-all select-none group border-l-2 border-transparent hover:border-blue-500"
+        className="flex items-center gap-3 py-2 cursor-pointer hover:bg-zinc-50 transition-all select-none group border-l-2 border-transparent hover:border-amber-500"
         onClick={() => setIsOpen(!isOpen)}
       >
         <svg className={`w-3 h-3 transition-transform duration-200 ${isOpen ? 'rotate-90' : 'rotate-0'} text-zinc-300 shrink-0`} fill="currentColor" viewBox="0 0 24 24">
@@ -38,7 +48,13 @@ const FileTreeNode: React.FC<{ node: FileNode; depth: number }> = ({ node, depth
       {isOpen && node.children && (
         <div className="ml-5 pl-1.5 border-l-2 border-zinc-100 flex flex-col">
           {node.children.map((child, index) => (
-            <FileTreeNode key={`${child.name}-${index}`} node={child} depth={depth + 1} />
+            <FileTreeNode 
+              key={`${child.name}-${index}`} 
+              node={child} 
+              depth={depth + 1} 
+              path={currentPath}
+              onFileClick={onFileClick}
+            />
           ))}
         </div>
       )}
@@ -46,12 +62,18 @@ const FileTreeNode: React.FC<{ node: FileNode; depth: number }> = ({ node, depth
   );
 };
 
-export const FileTree: React.FC<FileTreeProps> = ({ tree }) => {
+export const FileTree: React.FC<FileTreeProps> = ({ tree, onFileClick }) => {
   return (
     <div className="w-full h-full bg-white flex flex-col">
-      <div className="flex-1 p-4 overflow-y-auto custom-scrollbar font-sans">
+      <div className="flex-1 p-4 overflow-y-auto scroller-industrial font-sans">
         {tree?.map((node, index) => (
-          <FileTreeNode key={`${node.name}-${index}`} node={node} depth={0} />
+          <FileTreeNode 
+            key={`${node.name}-${index}`} 
+            node={node} 
+            depth={0} 
+            path="" 
+            onFileClick={onFileClick}
+          />
         ))}
       </div>
     </div>
