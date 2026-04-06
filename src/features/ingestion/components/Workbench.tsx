@@ -17,7 +17,8 @@ import {
   ChevronRight,
   CheckCircle2,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  Component
 } from 'lucide-react';
 import { analysisClient } from '../../../api/AnalysisClient';
 import apiClient from '../../../api/Client';
@@ -197,6 +198,13 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
       icon: Cpu,
       desc: 'Business rules and data flow.',
       guidance: 'LOGIC SNIPPETS: Extract business rules. FORBID: No Java classes or Spring Boot services.'
+    },
+    {
+      id: 'code_layer',
+      label: 'Code Layer',
+      icon: Component,
+      desc: 'Architectural tiers and patterns.',
+      guidance: 'LAYER ANALYZER v1.0: Analyze project tiers (Controllers, Services, REPOs). FORBID: No Spring Boot/Java.'
     },
     {
       id: 'migration',

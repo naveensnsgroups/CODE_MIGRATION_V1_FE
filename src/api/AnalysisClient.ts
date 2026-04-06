@@ -7,7 +7,7 @@ export const analysisClient = {
   /**
    * Fetches the code context from our local backend.
    */
-  async getLocalContext(projectId: string) {
+  async getLocalContext(projectId: string): Promise<any> {
     const response = await apiClient.get(`analysis/${projectId}/context`);
     return response.data.context;
   },
@@ -17,7 +17,7 @@ export const analysisClient = {
    */
   async analyzeWithAgent(
     projectId: string, 
-    context: string, 
+    context: any, 
     action: string = 'general', 
     previousIntelligence?: string,
     stackSettings?: { backend: string; framework: string; frontend?: string }
@@ -30,6 +30,7 @@ export const analysisClient = {
       'general': 'Provide a high-level summary, tech stack, and overall architecture.',
       'routes': 'SURGICAL ANALYSIS: Extract API endpoints and service imports.',
       'logic': 'SURGICAL ANALYSIS: Extract core business logic functions.',
+      'code_layer': 'LAYER ANALYZER v1.0: Analyze the project architecture layers (Controllers, Services, Repositories). Detect architectural patterns and layer dependencies.',
       'migration': 'MASTER ARCHITECT v2.3: Perform a high-depth architectural synthesis. Map legacy logic to target idioms.',
       'planner': 'EXECUTION PLANNER v2.4: Take the provided strategic roadmap (in code_context) and break it down into a step-by-step technical guide with terminal commands and file templates.'
     };
@@ -39,6 +40,7 @@ export const analysisClient = {
     
     if (action === 'routes') fullUrl = `${baseUrl}/routes`;
     else if (action === 'logic') fullUrl = `${baseUrl}/logic`;
+    else if (action === 'code_layer') fullUrl = `${baseUrl}/code-layer-analyzer`;
     else if (action === 'migration') fullUrl = `${baseUrl}/migration`;
     else if (action === 'planner') fullUrl = `${baseUrl}/planner`;
 
@@ -58,7 +60,10 @@ export const analysisClient = {
       timestamp: new Date().toISOString()
     };
 
-    const response = await axios.post(fullUrl, payload);
+    const response = await apiClient.post('analysis/proxy', {
+      full_url: fullUrl,
+      payload: payload
+    });
     const raw = response.data;
 
     return (
