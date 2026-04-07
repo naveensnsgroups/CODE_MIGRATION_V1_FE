@@ -79,7 +79,7 @@ export const LogicHero: React.FC<{ data: StructuredData }> = ({ data }) => {
                                {file.imports.map((imp: any, i: number) => (
                                  <div key={i} className="flex items-center gap-3 group">
                                    <div className="w-1.5 h-1.5 rounded-full bg-zinc-900 group-hover:bg-amber-400 transition-colors" />
-                                   <p className="text-[11px] font-medium text-zinc-500 truncate group-hover:text-zinc-900 transition-colors uppercase italic">{imp}</p>
+                                   <p className="text-[12px] font-medium text-zinc-500 truncate group-hover:text-zinc-900 transition-colors uppercase italic">{imp}</p>
                                  </div>
                                ))}
                              </div>
