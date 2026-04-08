@@ -11,10 +11,17 @@ export interface RouteNode {
 
 export interface StructuredData {
   summary: string;
-  tech_stack: {
+  analysis_summary?: string;
+  tech_stack?: {
     frontend: string[];
     backend: string[];
     statics: string[];
+  };
+  metadata?: {
+    language?: string;
+    framework?: string;
+    total_files?: number;
+    [key: string]: any;
   };
   architecture?: Array<{ file: string; purpose: string; complexity_score?: number }>;
   core_features?: Array<{ label: string; desc: string; dependencies?: string[] } | string>;
@@ -31,44 +38,26 @@ export interface StructuredData {
     source: string;
     description: string;
   }>;
-  backend?: Array<{
-    file_name: string;
-    endpoints: Array<{
-      endpoint: string;
-      method: string;
-      function_name: string;
-      description: string;
-      input: string[];
-      output: string[];
-      flow: string[];
-      business_rules: string[];
-    }>;
-  }>;
-  frontend?: Array<{
-    page_name: string;
-    file_name: string;
-    inputs: string[];
-    api_calls: Array<{
-      endpoint: string;
-      method: string;
-      purpose: string;
-    }>;
-    user_actions: string[];
-    response_handling: string[];
-  }>;
+  backend?: any[]; // Simplified for deep mission segments
+  frontend?: any[]; // Simplified for deep mission segments
+  assets?: any[];
   target_stack?: {
     backend: string;
     framework: string;
     frontend?: string;
     database?: string;
   };
-  roadmap?: Array<{
-    phase: string;
-    tasks: string[];
-    priority: 'High' | 'Med' | 'Low' | 'Critical';
-  }>;
+  strategy?: {
+    roadmap?: any[];
+    milestones?: any[];
+    stack_decisions?: any[];
+  };
+  roadmap?: any[];
+  milestones?: any[];
+  stack_decisions?: any[];
   feasibility_score?: number;
   modernization_strategy?: string;
+  [key: string]: any;
 }
 
 export const Tag: React.FC<{ children: React.ReactNode }> = ({ children }) => (

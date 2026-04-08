@@ -3,7 +3,7 @@ import { SummaryBox, StructuredData } from './CommonElements';
 import { RoutesHero } from './RoutesHero';
 import { LogicHero } from './LogicHero';
 import { ArchitectureHero } from './ArchitectureHero';
-import { MigrationHero } from './MigrationHero';
+import { StrategyHero } from './StrategyHero';
 
 interface ReportDashboardProps {
   data: StructuredData;
@@ -22,7 +22,7 @@ export const ReportDashboard: React.FC<ReportDashboardProps> = ({ data, activeAc
       ) : activeAction === 'logic' ? (
         <LogicHero data={data} />
       ) : activeAction === 'migration' ? (
-        <MigrationHero data={data} />
+        <StrategyHero data={data} />
       ) : activeAction === 'general' ? (
         <ArchitectureHero data={data} />
       ) : (
