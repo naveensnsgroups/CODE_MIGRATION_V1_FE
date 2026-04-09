@@ -68,7 +68,7 @@ export const RepoInput: React.FC<RepoInputProps> = ({ onAnalyze, loading }) => {
             className="p-8 border-4 border-dashed border-zinc-100 rounded-sm flex flex-col items-center justify-center text-center group hover:border-amber-400 transition-colors cursor-pointer bg-zinc-50/50"
           >
              <Search size={32} className="text-zinc-200 mb-4 group-hover:text-amber-400 transition-colors" />
-             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 group-hover:text-zinc-950">Select From My Repositories</p>
+             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 group-hover:text-zinc-950">Select From Accessible Repositories</p>
              <span className="text-[8px] font-bold text-zinc-300 mt-2">PRIVATE & PUBLIC ACCESS ACTIVE</span>
           </div>
           

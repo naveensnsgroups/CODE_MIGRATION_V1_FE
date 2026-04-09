@@ -13,6 +13,9 @@ interface Repository {
   description: string;
   updated_at: string;
   language: string;
+  owner: {
+    login: string;
+  };
 }
 
 interface RepoSelectorProps {
@@ -45,7 +48,9 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
     }
 
     try {
-      const response = await fetch('https://api.github.com/user/repos?sort=updated&per_page=100', {
+      // 🧪 Fetching all accessible repos (owned, shared, organization)
+      // Explicitly adding affiliation to ensure collaborator projects are returned
+      const response = await fetch('https://api.github.com/user/repos?sort=updated&per_page=100&affiliation=owner,collaborator,organization_member', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json'
@@ -83,8 +88,8 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
               <GitBranch size={18} strokeWidth={3} />
             </div>
             <div>
-              <h2 className="text-sm font-medium uppercase tracking-widest text-white italic">Repository Selection</h2>
-              <p className="text-[10px] font-semibold text-amber-400/80 uppercase tracking-tight">Accessing GitHub Intelligence</p>
+              <h2 className="text-sm font-medium uppercase tracking-widest text-white italic">Intelligence Hub / Repositories</h2>
+              <p className="text-[10px] font-semibold text-amber-400/80 uppercase tracking-tight">Accessing GitHub Intelligence (Owned + Shared)</p>
             </div>
           </div>
           <button 
@@ -101,7 +106,7 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" size={16} />
             <input
               type="text"
-              placeholder="Search your repositories..."
+              placeholder="Search all accessible repositories..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-white border-2 border-zinc-200 rounded-sm pl-12 pr-4 py-3 text-[10px] font-semibold uppercase tracking-widest focus:border-zinc-950 outline-none transition-all"
@@ -138,9 +143,14 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
                       {repo.private ? <Lock size={14} /> : <Globe size={14} />}
                     </div>
                     <div>
-                      <h3 className="text-[11px] font-medium uppercase tracking-tighter text-zinc-950 group-hover:text-amber-500 transition-colors">
-                        {repo.name}
-                      </h3>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[8px] font-bold bg-zinc-900 text-white px-1.5 py-0.5 rounded-sm uppercase tracking-tighter">
+                          {repo.owner.login}
+                        </span>
+                        <h3 className="text-[11px] font-medium uppercase tracking-tighter text-zinc-950 group-hover:text-amber-500 transition-colors">
+                          {repo.name}
+                        </h3>
+                      </div>
                       <div className="flex items-center gap-3 mt-1">
                         <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-widest">
                           {repo.language || 'Documentation'}
@@ -154,6 +164,14 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
                   <ChevronRight size={16} className="text-zinc-200 group-hover:text-zinc-950 transition-colors translate-x-0 group-hover:translate-x-1" />
                 </button>
               ))}
+              
+              {/* 🧪 Troubleshooting Note */}
+              <div className="mt-6 p-4 bg-zinc-50 border border-zinc-100 rounded-sm">
+                <p className="text-[9px] font-medium text-zinc-400 uppercase tracking-widest text-center leading-relaxed">
+                  Don&apos;t see a shared repository? <br/>
+                  Ensure you&apos;ve <span className="text-amber-600">accepted the invite</span> on GitHub and your token has <span className="text-amber-600">repo</span> access.
+                </p>
+              </div>
             </div>
           )}
         </div>
