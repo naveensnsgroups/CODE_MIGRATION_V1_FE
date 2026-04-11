@@ -1,6 +1,7 @@
+import axios from 'axios';
 import apiClient from './Client';
 
-const N8N_BASE_URL = process.env.NEXT_PUBLIC_N8N_BASE_URL;
+const SNS_BASE_URL = process.env.NEXT_PUBLIC_SNS_BASE_URL;
 
 export const analysisClient = {
   /**
@@ -28,69 +29,81 @@ export const analysisClient = {
   },
 
   /**
-   * Sends the code context to the n8n LLM Agent for analysis.
+   * Sends the code context to the SNS LLM Agent for analysis.
+   * DIRECT CALL (No Proxy)
    */
   async analyzeWithAgent(
-    projectId: string, 
-    context: any, 
-    action: string = 'general', 
+    projectId: string,
+    context: any,
+    action: string = 'general',
     previousIntelligence?: string,
     stackSettings?: { backend: string; framework: string; frontend?: string }
-  ) {
-    if (!N8N_BASE_URL) {
-      throw new Error('n8n Base Webhook URL is not configured in .env.local');
+  ): Promise<string> {
+    if (!SNS_BASE_URL) {
+      throw new Error('SNS Base Webhook URL is not configured in .env.local');
     }
 
     const guidanceHints: Record<string, string> = {
-      'general': 'Architecture, stack, and file map.',
-      'routes': 'API endpoints and logic handlers.',
-      'logic': 'Business rules and data flow.',
+      'general':    'Architecture, stack, and file map.',
+      'routes':     'API endpoints and logic handlers.',
+      'logic':      'Business rules and data flow.',
       'code_layer': 'LAYER ANALYZER v1.0: Analyze architectural tiers (Controllers, Services, Repositories).',
-      'migration': 'MASTER ARCHITECT v2.3: Perform a high-depth architectural synthesis.',
-      'planner': 'EXECUTION PLANNER v2.4: Tactical roadmap and terminal commands.'
+      'migration':  'MASTER ARCHITECT v2.3: Perform a high-depth architectural synthesis.',
+      'planner':    'EXECUTION PLANNER v2.4: Tactical roadmap and terminal commands.'
     };
 
-    const baseUrl = N8N_BASE_URL.replace(/\/$/, '');
-    let fullUrl = `${baseUrl}/analyse`;
-    
-    // 🌐 Surgical Webhook Routing (v17.1)
-    if (action === 'routes') fullUrl = `${baseUrl}/routes`;
-    else if (action === 'logic') fullUrl = `${baseUrl}/logic`;
+    const baseUrl = SNS_BASE_URL.replace(/\/$/, '');
+    let fullUrl = `${baseUrl}/analyze`;
+
+    // Routing
+    if      (action === 'routes')     fullUrl = `${baseUrl}/routes`;
+    else if (action === 'logic')      fullUrl = `${baseUrl}/logic`;
     else if (action === 'code_layer') fullUrl = `${baseUrl}/code-layer-analyzer`;
-    else if (action === 'migration') fullUrl = `${baseUrl}/migration`; // 🚀 Live Production n8n Port
-    else if (action === 'planner') fullUrl = `${baseUrl}/planner`;
+    else if (action === 'migration')  fullUrl = `${baseUrl}/migration`;
+    else if (action === 'planner')    fullUrl = `${baseUrl}/planner`;
 
-    // 🧠 Directive Hydration (v21.2)
-    // Use bundled skill_content if available, otherwise fetch it
-    const skillDirective = (action === 'migration' && typeof context === 'object' && 'skill_content' in context) 
-      ? context.skill_content 
-      : (action === 'migration' ? await this.getSkillDirective('migration') : '');
+    // Directive Hydration
+    const skillDirective =
+      action === 'migration' && typeof context === 'object' && 'skill_content' in context
+        ? context.skill_content
+        : action === 'migration'
+          ? await this.getSkillDirective('migration')
+          : '';
 
-    // Extract the raw context if it was bundled
-    const rawContext = (typeof context === 'object' && 'context' in context) ? context.context : context;
+    const rawContext =
+      typeof context === 'object' && 'context' in context ? context.context : context;
 
     const payload = {
       project_id: projectId,
       code_context: rawContext,
-      action: action,
+      action,
       guidance_hint: guidanceHints[action] || '',
-      skill_directive: skillDirective, // High-depth rules injection
+      skill_directive: skillDirective,
       stack_settings: stackSettings || null,
       previous_intelligence: previousIntelligence || '',
       timestamp: new Date().toISOString()
     };
 
-    const response = await apiClient.post('analysis/proxy', {
-      full_url: fullUrl,
-      payload: payload
+    console.log(`[Analysis] Calling SNS DIRECTLY: ${fullUrl}`);
+
+    // Direct SNS Call
+    const response = await axios.post(fullUrl, payload, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 600000 // 10 minutes
     });
+
     const raw = response.data;
 
-    return (
-      raw?.result?.response || 
-      raw?.[0]?.json?.response || 
-      raw?.output || 
+    // Extract result from response shapes
+    const extractedOutput = (
+      raw?.result?.response ||
+      raw?.[0]?.json?.response ||
+      raw?.output ||
       (typeof raw === 'string' ? raw : JSON.stringify(raw))
     ) as string;
+
+    return extractedOutput;
   }
 };

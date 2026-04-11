@@ -38,7 +38,7 @@ function cleanAndParse(raw: string | object | null, contextRaw?: string | null):
     try {
       const parsed = JSON.parse(cleaned);
       
-      // 🧪 n8n Surgical Unwrap: Detect {"items": [{"json": ...}]}
+      // 🧪  Surgical Unwrap: Detect {"items": [{"json": ...}]}
       if (parsed && Array.isArray(parsed.items) && parsed.items.length > 0) {
         const firstItem = parsed.items[0];
         const payload = firstItem.json || firstItem;
@@ -58,7 +58,7 @@ function cleanAndParse(raw: string | object | null, contextRaw?: string | null):
   // 1. Initial Parse & Unwrap
   let parsed = extract(raw);
   
-  // 🧪 Surgical Unwrap: Deep Dive into n8n results (items, result, response)
+  // 🧪 Surgical Unwrap: Deep Dive into  results (items, result, response)
   if (parsed && typeof parsed === 'object') {
     parsed = (parsed as any)?.items?.[0]?.json || 
              (parsed as any)?.items?.[0] || 
