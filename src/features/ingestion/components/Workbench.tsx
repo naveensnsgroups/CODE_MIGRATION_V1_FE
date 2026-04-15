@@ -38,6 +38,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
   const [isMigrationWizardOpen, setIsMigrationWizardOpen] = useState(false);
   const [selectedFilePath, setSelectedFilePath] = useState<string | null>(null);
   const [isActionsCollapsed, setIsActionsCollapsed] = useState(false);
+  const [isPolling, setIsPolling] = useState<string | null>(null);
 
   const syncIntelligence = useCallback(async () => {
     try {
@@ -50,8 +51,11 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
 
         setAnalysisResults(prev => ({ ...prev, ...loadedResults }));
 
-        // Auto-select general only if nothing is selected or if we just loaded it
-        if (loadedResults['general']) {
+        // 🧠 Strategic Auto-Switch (v26.1): If 'routes' found in sync, prioritize that view
+        if (loadedResults['routes']) {
+          setActiveAction('routes');
+          console.log(`[Intelligence Hub] Auto-switching to MAP ROUTES view.`);
+        } else if (loadedResults['general']) {
           setActiveAction(prev => (prev === 'general' || !prev ? 'general' : prev));
         }
         console.log(`[Intelligence Hub] Synced reports from DB.`);
@@ -81,7 +85,37 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
       syncIntelligence();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.project_id, data.reports]); // Keep dependencies stable: data.reports change handles hydration.
+  }, [data.project_id, data.reports]); 
+
+  // ─── 🔄 Intelligence Polling Engine (v22.0) ───
+  React.useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (isPolling) {
+      console.log(`[Polling Engine] Background Sync Active for: ${isPolling}`);
+      interval = setInterval(async () => {
+        try {
+          const response = await apiClient.get(`analysis/${data.project_id}/reports`);
+          if (response.data?.reports) {
+            const remoteReport = response.data.reports.find((r: any) => r.action === isPolling);
+            
+            if (remoteReport) {
+              console.log(`[Polling Engine] Success! Found new intelligence for ${isPolling}`);
+              setAnalysisResults(prev => ({ ...prev, [isPolling]: remoteReport.content }));
+              setIsPolling(null);
+              setIsAnalyzing(null);
+            }
+          }
+        } catch (err) {
+          console.warn('[Polling Engine] Sync attempt failed:', err);
+        }
+      }, 10000); // Poll every 10 seconds
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isPolling, data.project_id]);
 
   const autoSave = async (action: string, content: string) => {
     try {
@@ -129,12 +163,23 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
       // 💾 Auto-Save to Database
       autoSave(action, output);
 
-    } catch (error) {
-      console.error(`Analysis (${action}) failed:`, error);
-      alert(`${action} scan failed. Check console for details.`);
+    } catch (error: any) {
+      if (error.message === 'BACKGROUND_PROCESS_STARTED') {
+        console.log(`[Workbench] Switching to Background Sync mode for ${action}`);
+        setIsPolling(action);
+        // We keep isAnalyzing set to action so the UI shows the loader
+      } else {
+        console.error(`Analysis (${action}) failed:`, error);
+        alert(`${action} scan failed. Check console for details.`);
+        setIsAnalyzing(null);
+      }
     } finally {
-      setIsAnalyzing(null);
-      setShowRerunModal(null);
+      // Logic: Only clear analyzer if we AREN'T polling.
+      // We check setIsAnalyzing directly instead of error variable
+      if (isAnalyzing && !isPolling) {
+         setIsAnalyzing(null);
+         setShowRerunModal(null);
+      }
     }
   };
 

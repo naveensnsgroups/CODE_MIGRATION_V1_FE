@@ -9,14 +9,79 @@ export interface RouteNode {
   dependencies?: string[];
 }
 
+export interface ApiNode {
+  path: string;
+  method: string;
+  controller: string;
+  route_file: string;
+  controller_file: string;
+  description: string;
+  request: {
+    body: string[];
+    params: string[];
+    query: string[];
+  };
+  response: {
+    status_codes: number[];
+    fields: string[];
+  };
+  database: {
+    models: string[];
+    operations: string[];
+  };
+  dependencies: string[];
+  auth_required: boolean;
+  business_logic: string;
+}
+
+export interface ModelNode {
+  name: string;
+  file: string;
+  fields: Array<{
+    name: string;
+    type: string;
+    required: boolean;
+    default: any;
+    enum: string[];
+  }>;
+  relations: Array<{
+    field: string;
+    ref: string;
+    type: string;
+  }>;
+}
+
+export interface ExternalService {
+  name: string;
+  type: string;
+  usage: string;
+}
+
 export interface StructuredData {
-  summary: string;
+  summary: string | {
+    database_type?: string;
+    orm?: string;
+    total_models?: number;
+    [key: string]: any;
+  };
   analysis_summary?: string;
+  project_id?: string;
+  action?: string;
   tech_stack?: {
     frontend: string[];
     backend: string[];
     statics: string[];
   };
+  package_summary?: {
+    total_dependencies: number;
+    total_dev_dependencies: number;
+  };
+  dependencies?: Array<{ name: string; version: string; purpose: string; type?: string }>;
+  dev_dependencies?: Array<{ name: string; version: string; purpose: string }>;
+  env_summary?: string;
+  total_env_files?: number;
+  files?: Array<{ file_name: string; variables_count: number }>;
+  grouped_variables?: Record<string, Array<any>>;
   metadata?: {
     language?: string;
     framework?: string;
@@ -27,6 +92,16 @@ export interface StructuredData {
   core_features?: Array<{ label: string; desc: string; dependencies?: string[] } | string>;
   business_rules?: string[];
   routes?: Array<RouteNode>;
+  apis?: Array<ApiNode>;
+  models?: Array<ModelNode>;
+  external_services?: Array<ExternalService>;
+  operations?: Array<{
+    model: string;
+    used_in: string;
+    operations: string[];
+  }>;
+  total_apis?: number;
+  total_models?: number;
   logic_units?: Array<{
     function_name: string;
     description: string;
@@ -38,8 +113,8 @@ export interface StructuredData {
     source: string;
     description: string;
   }>;
-  backend?: any[]; // Simplified for deep mission segments
-  frontend?: any[]; // Simplified for deep mission segments
+  backend?: any[];
+  frontend?: any[];
   assets?: any[];
   target_stack?: {
     backend: string;
@@ -77,8 +152,19 @@ export const SectionHeading: React.FC<{ icon: React.ReactNode; title: string }> 
   </div>
 );
 
-export const SummaryBox: React.FC<{ summary?: string; activeAction?: string }> = ({ summary, activeAction }) => {
+export const SafeText: React.FC<{ text?: any; fallback?: string }> = ({ text, fallback }) => {
+  if (!text) return <span>{fallback}</span>;
+  if (typeof text === 'string') return <span>{text}</span>;
+  if (Array.isArray(text)) return <span>{text.join(' ')}</span>;
+  if (typeof text === 'object') return <span>{JSON.stringify(text).substring(0, 150)}...</span>;
+  return <span>{String(text)}</span>;
+};
+
+export const SummaryBox: React.FC<{ summary?: any; activeAction?: string }> = ({ summary, activeAction }) => {
   if (!summary) return null;
+
+  const isObject = typeof summary === 'object' && !Array.isArray(summary);
+
   return (
     <div className="relative group">
       <div className="absolute inset-0 bg-amber-400 rotate-0.5 rounded-sm opacity-5 group-hover:opacity-10 transition-opacity" />
@@ -92,17 +178,33 @@ export const SummaryBox: React.FC<{ summary?: string; activeAction?: string }> =
             </span>
           </div>
           {activeAction && (
-            <span className="px-2 py-0.5 bg-emerald-500 text-white text-[10px] font-semibold uppercase tracking-widest rounded-sm border border-emerald-600">
-              FOCUS: {activeAction.toUpperCase()} SCAN
+            <span className="px-2 py-0.5 bg-zinc-950 text-white text-[10px] font-semibold uppercase tracking-widest rounded-sm border border-zinc-950">
+              FOCUS: {activeAction.toUpperCase()} NODE
             </span>
           )}
         </div>
 
-        <p className="text-sm font-bold leading-relaxed text-zinc-900 pr-4 italic">
-          &quot;{summary}&quot;
-        </p>
+        {isObject ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+             {Object.entries(summary).map(([key, value]) => {
+               const label = key.replace(/_/g, ' ').toUpperCase();
+               return (
+                 <div key={key} className="bg-white border border-zinc-200 p-4 rounded-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,0.05)] transition-all hover:bg-zinc-50">
+                    <span className="block text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-1">{label}</span>
+                    <span className="text-[14px] font-bold text-zinc-950 uppercase italic tracking-tight">
+                      <SafeText text={value} fallback="—" />
+                    </span>
+                 </div>
+               );
+             })}
+          </div>
+        ) : (
+          <p className="text-sm font-bold leading-relaxed text-zinc-900 pr-4 italic">
+            &quot;<SafeText text={summary} />&quot;
+          </p>
+        )}
 
-        <div className="mt-6 flex gap-4 opacity-50 grayscale hover:grayscale-0 transition-all">
+        <div className="mt-8 flex gap-4 opacity-50 grayscale hover:grayscale-0 transition-all">
           <div className="w-12 h-1 bg-zinc-300 rounded-full" />
           <div className="w-8 h-1 bg-amber-400 rounded-full" />
           <div className="w-16 h-1 bg-zinc-950 rounded-full" />

@@ -30,7 +30,7 @@ export const analysisClient = {
 
   /**
    * Sends the code context to the SNS LLM Agent for analysis.
-   * DIRECT CALL (No Proxy)
+   * ROUTED via Backend Proxy to prevent CORS and handle long timeouts.
    */
   async analyzeWithAgent(
     projectId: string,
@@ -55,7 +55,7 @@ export const analysisClient = {
     const baseUrl = SNS_BASE_URL.replace(/\/$/, '');
     let fullUrl = `${baseUrl}/analyze`;
 
-    // Routing
+    // Routing Logic for SNS endpoints
     if      (action === 'routes')     fullUrl = `${baseUrl}/routes`;
     else if (action === 'logic')      fullUrl = `${baseUrl}/logic`;
     else if (action === 'code_layer') fullUrl = `${baseUrl}/code-layer-analyzer`;
@@ -84,26 +84,39 @@ export const analysisClient = {
       timestamp: new Date().toISOString()
     };
 
-    console.log(`[Analysis] Calling SNS DIRECTLY: ${fullUrl}`);
+    console.log(`[Analysis] Routing via Proxy for ${action}: ${fullUrl}`);
 
-    // Direct SNS Call
-    const response = await axios.post(fullUrl, payload, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      timeout: 600000 // 10 minutes
-    });
+    try {
+      // 🚀 Surgical Proxy Bridge: Calls /api/analysis/proxy
+      const response = await apiClient.post('analysis/proxy', {
+        full_url: fullUrl,
+        payload: payload
+      }, {
+        timeout: 1200000 // 20 minutes (Frontend limit)
+      });
 
-    const raw = response.data;
+      const raw = response.data;
 
-    // Extract result from response shapes
-    const extractedOutput = (
-      raw?.result?.response ||
-      raw?.[0]?.json?.response ||
-      raw?.output ||
-      (typeof raw === 'string' ? raw : JSON.stringify(raw))
-    ) as string;
+      // Handle the "mission_started" graceful timeout from backend
+      if (raw.status === 'mission_started') {
+        throw new Error('MISSION_STARTED');
+      }
 
-    return extractedOutput;
+      // Extract result from response shapes
+      const extractedOutput = (
+        raw?.result?.response ||
+        raw?.[0]?.json?.response ||
+        raw?.output ||
+        (typeof raw === 'string' ? raw : JSON.stringify(raw))
+      ) as string;
+
+      return extractedOutput;
+    } catch (error: any) {
+      if (error.message === 'MISSION_STARTED' || (error.code === 'ECONNABORTED' && action !== 'general')) {
+        // This is caught by Workbench to trigger polling
+        throw new Error('BACKGROUND_PROCESS_STARTED');
+      }
+      throw error;
+    }
   }
 };

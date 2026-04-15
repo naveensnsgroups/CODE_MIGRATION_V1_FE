@@ -4,6 +4,7 @@ import { RoutesHero } from './RoutesHero';
 import { LogicHero } from './LogicHero';
 import { ArchitectureHero } from './ArchitectureHero';
 import { StrategyHero } from './StrategyHero';
+import { CodeLayerHero } from './CodeLayerHero';
 
 interface ReportDashboardProps {
   data: StructuredData;
@@ -21,17 +22,13 @@ export const ReportDashboard: React.FC<ReportDashboardProps> = ({ data, activeAc
         <RoutesHero data={data} />
       ) : activeAction === 'logic' ? (
         <LogicHero data={data} />
+      ) : activeAction === 'code_layer' ? (
+        <CodeLayerHero data={data} />
       ) : activeAction === 'migration' ? (
         <StrategyHero data={data} />
-      ) : activeAction === 'general' ? (
-        <ArchitectureHero data={data} />
       ) : (
-        /* Default / Migration: Show Everything */
-        <>
-          <ArchitectureHero data={data} />
-          <RoutesHero data={data} />
-          <LogicHero data={data} />
-        </>
+        /* 🚢 Comprehensive Intelligence Hub (General & Default) */
+        <ArchitectureHero data={data} />
       )}
     </div>
   );
