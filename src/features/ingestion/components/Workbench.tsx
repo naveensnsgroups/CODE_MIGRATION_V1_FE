@@ -73,9 +73,9 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
       Object.entries(data.reports).forEach(([action, content]) => {
         loadedResults[action] = typeof content === 'string' ? content : JSON.stringify(content);
       });
-      
+
       setAnalysisResults(loadedResults);
-      
+
       // Auto-focus on general if it exists and we are at the default state
       if (loadedResults['general'] && activeAction === 'general') {
         setActiveAction('general');
@@ -85,7 +85,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
       syncIntelligence();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.project_id, data.reports]); 
+  }, [data.project_id, data.reports]);
 
   // ─── 🔄 Intelligence Polling Engine (v22.0) ───
   React.useEffect(() => {
@@ -98,7 +98,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
           const response = await apiClient.get(`analysis/${data.project_id}/reports`);
           if (response.data?.reports) {
             const remoteReport = response.data.reports.find((r: any) => r.action === isPolling);
-            
+
             if (remoteReport) {
               console.log(`[Polling Engine] Success! Found new intelligence for ${isPolling}`);
               setAnalysisResults(prev => ({ ...prev, [isPolling]: remoteReport.content }));
@@ -177,8 +177,8 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
       // Logic: Only clear analyzer if we AREN'T polling.
       // We check setIsAnalyzing directly instead of error variable
       if (isAnalyzing && !isPolling) {
-         setIsAnalyzing(null);
-         setShowRerunModal(null);
+        setIsAnalyzing(null);
+        setShowRerunModal(null);
       }
     }
   };
@@ -286,7 +286,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
           {analysisResults['migration'] && !analysisResults['planner'] && (
             <button
               onClick={handleGeneratePlan}
-              className="px-5 py-2.5 bg-amber-400 border-2 border-zinc-950 text-zinc-950 text-[10px] font-medium uppercase tracking-widest rounded-sm hover:bg-amber-300 transition-all flex items-center gap-2 shadow-[2px_2px_0px_0px_rgba(9,9,11,1)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5"
+              className="px-5 py-2.5 bg-amber-400 border-2 border-zinc-950 text-zinc-950 text-[12px] font-medium uppercase tracking-widest rounded-sm hover:bg-amber-300 transition-all flex items-center gap-2 shadow-[2px_2px_0px_0px_rgba(9,9,11,1)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5"
             >
               <Sparkles className="w-3 h-3" />
               Generate Execution Plan
@@ -294,14 +294,14 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
           )}
           <button
             onClick={syncIntelligence}
-            className="px-5 py-2.5 bg-white border-2 border-zinc-950 text-zinc-950 text-[10px] font-medium uppercase tracking-widest rounded-sm hover:bg-zinc-50 transition-all flex items-center gap-2 shadow-[2px_2px_0px_0px_rgba(9,9,11,1)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5"
+            className="px-5 py-2.5 bg-white border-2 border-zinc-950 text-zinc-950 text-[12px] font-medium uppercase tracking-widest rounded-sm hover:bg-zinc-50 transition-all flex items-center gap-2 shadow-[2px_2px_0px_0px_rgba(9,9,11,1)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5"
           >
             <RefreshCcw className="w-3 h-3 text-amber-500" />
             Sync Intelligence Hub
           </button>
           <button
             onClick={() => window.location.reload()}
-            className="px-5 py-2.5 bg-zinc-950 text-white text-[10px] font-medium uppercase tracking-widest rounded-sm hover:bg-zinc-800 transition-all flex items-center gap-2 group"
+            className="px-5 py-2.5 bg-zinc-950 text-white text-[12px] font-medium uppercase tracking-widest rounded-sm hover:bg-zinc-800 transition-all flex items-center gap-2 group"
           >
             <Layout className="w-3 h-3 group-hover:rotate-12 transition-transform duration-500" />
             New Project
@@ -316,16 +316,16 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
         {!isExpanded && (
           <div className="lg:col-span-7 flex flex-col h-[860px]">
             {selectedFilePath ? (
-              <CodeViewer 
-                projectId={data.project_id} 
-                filePath={selectedFilePath} 
-                onClose={() => setSelectedFilePath(null)} 
+              <CodeViewer
+                projectId={data.project_id}
+                filePath={selectedFilePath}
+                onClose={() => setSelectedFilePath(null)}
               />
             ) : (
               <div className="flex flex-col h-full bg-white border-2 border-zinc-950 rounded-sm shadow-[6px_6px_0px_0px_rgba(9,9,11,1)] overflow-hidden">
                 {/* Panel Header */}
                 <div className="bg-zinc-950 px-6 py-3 flex items-center justify-between">
-                  <span className="text-[10px] font-medium uppercase tracking-widest text-white italic">Source Explorer</span>
+                  <span className="text-[12px] font-medium uppercase tracking-widest text-white italic">Source Explorer</span>
                   <div className="flex gap-2">
                     <div className="w-2 h-2 rounded-full bg-red-500" />
                     <div className="w-2 h-2 rounded-full bg-amber-400" />
@@ -333,9 +333,9 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
                   </div>
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 scroller-industrial">
-                  <FileTree 
-                    tree={data.file_tree} 
-                    onFileClick={(path) => setSelectedFilePath(path)} 
+                  <FileTree
+                    tree={data.file_tree}
+                    onFileClick={(path) => setSelectedFilePath(path)}
                   />
                 </div>
               </div>
@@ -360,9 +360,9 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
 
           {/* Panel Header */}
           <div className="bg-zinc-950 px-6 py-3 flex items-center justify-between flex-shrink-0">
-            <span className="text-[10px] font-medium uppercase tracking-widest text-white italic">Intelligence Hub</span>
+            <span className="text-[12px] font-medium uppercase tracking-widest text-white italic">Intelligence Hub</span>
             <div className="flex items-center gap-3">
-              <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">
+              <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">
                 {data.metadata?.language || '—'} / {data.metadata?.framework || '—'}
               </span>
             </div>
@@ -374,7 +374,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
               <button
                 key={action.id}
                 onClick={() => setActiveAction(action.id)}
-                className={`flex-1 min-w-[100px] py-3 px-2 text-[9px] font-medium uppercase tracking-widest transition-all border-r border-zinc-200 last:border-r-0 flex flex-col items-center justify-center gap-0.5 ${activeAction === action.id
+                className={`flex-1 min-w-[100px] py-3 px-2 text-[11px] font-medium uppercase tracking-widest transition-all border-r border-zinc-200 last:border-r-0 flex flex-col items-center justify-center gap-0.5 ${activeAction === action.id
                   ? 'bg-amber-400 text-zinc-950'
                   : 'bg-white text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'
                   }`}
@@ -398,7 +398,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
                 <p className="text-xs font-medium uppercase tracking-widest text-zinc-950 animate-pulse">Scanning Architecture...</p>
                 <div className="flex items-center gap-2 px-3 py-1 bg-zinc-50 border border-zinc-200 rounded-full">
                   <Sparkles className="w-3 h-3 text-amber-500" />
-                  <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">Bundling surgical context</span>
+                  <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Bundling surgical context</span>
                 </div>
               </div>
             ) : analysisResults[activeAction] ? (
@@ -417,7 +417,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-medium uppercase tracking-widest text-zinc-300">Hub Empty</p>
-                  <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-tighter max-w-[200px] leading-tight">Run a surgical scan below to populate this intelligence node.</p>
+                  <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-tighter max-w-[200px] leading-tight">Run a surgical scan below to populate this intelligence node.</p>
                 </div>
               </div>
             )}
@@ -426,9 +426,9 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
           {/* ── Action Dock Control (v10.0) ── */}
           <div className="relative border-t-2 border-zinc-950 flex justify-center flex-shrink-0">
             <button
-               onClick={() => setIsActionsCollapsed(!isActionsCollapsed)}
-               title={isActionsCollapsed ? "Expand Mission Control" : "Collapse Mission Control"}
-               className="absolute -top-4 w-8 h-8 rounded-full bg-zinc-950 border-2 border-zinc-950 text-white flex items-center justify-center hover:bg-amber-400 hover:text-zinc-950 transition-all shadow-[2px_2px_0px_0px_rgba(9,9,11,1)] z-[60]"
+              onClick={() => setIsActionsCollapsed(!isActionsCollapsed)}
+              title={isActionsCollapsed ? "Expand Mission Control" : "Collapse Mission Control"}
+              className="absolute -top-4 w-8 h-8 rounded-full bg-zinc-950 border-2 border-zinc-950 text-white flex items-center justify-center hover:bg-amber-400 hover:text-zinc-950 transition-all shadow-[2px_2px_0px_0px_rgba(9,9,11,1)] z-[60]"
             >
               {isActionsCollapsed ? <ChevronUp size={16} strokeWidth={3} /> : <ChevronDown size={16} strokeWidth={3} />}
             </button>
@@ -460,7 +460,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
                       )}
                     </div>
                     <div>
-                      <p className="text-[9px] font-medium uppercase tracking-widest leading-none mb-1">{action.label}</p>
+                      <p className="text-[11px] font-medium uppercase tracking-widest leading-none mb-1">{action.label}</p>
                       <p className="text-[8px] font-bold uppercase tracking-widest opacity-60 leading-none">
                         {worksExist ? 'Stored . Update?' : 'Initiate Scan'}
                       </p>

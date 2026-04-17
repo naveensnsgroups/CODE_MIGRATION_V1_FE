@@ -19,7 +19,7 @@ export const MigrationHero: React.FC<{ data: StructuredData }> = ({ data }) => {
         <div className="bg-white p-6 border-4 border-dashed border-zinc-200 rounded-sm shadow-[6px_6px_0px_0px_rgba(0,0,0,0.05)]">
           <div className="flex items-center gap-3 mb-6">
             <AlertTriangle size={18} className="text-zinc-400" />
-            <span className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">Source Environment (Legacy)</span>
+            <span className="text-[12px] font-medium uppercase tracking-widest text-zinc-500">Source Environment (Legacy)</span>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -44,11 +44,11 @@ export const MigrationHero: React.FC<{ data: StructuredData }> = ({ data }) => {
           </div>
           <div className="flex items-center gap-3 mb-4 relative z-10">
             <Layers size={18} className="text-amber-400" />
-            <span className="text-[10px] font-medium uppercase tracking-widest text-zinc-400">Target Destination</span>
+            <span className="text-[12px] font-medium uppercase tracking-widest text-zinc-400">Target Destination</span>
           </div>
           <div className="relative z-10">
             <h4 className="text-xl font-medium text-white uppercase italic leading-none">{targetStack.framework}</h4>
-            <p className="text-[9px] font-bold text-zinc-500 uppercase mt-2 tracking-tighter">Native Stack: <span className="text-amber-500">{targetStack.backend}</span> / {targetStack.database || "SQL Basis"}</p>
+            <p className="text-[11px] font-bold text-zinc-500 uppercase mt-2 tracking-tighter">Native Stack: <span className="text-amber-500">{targetStack.backend}</span> / {targetStack.database || "SQL Basis"}</p>
           </div>
         </div>
       </section>
@@ -58,7 +58,7 @@ export const MigrationHero: React.FC<{ data: StructuredData }> = ({ data }) => {
         <div className="bg-white p-6 border-4 border-zinc-950 rounded-sm shadow-[8px_8px_0px_0px_rgba(9,9,11,1)]">
           <div className="flex items-center gap-3 mb-4">
             <Gauge size={18} className="text-zinc-950" />
-            <span className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">Modernization Feasibility</span>
+            <span className="text-[12px] font-medium uppercase tracking-widest text-zinc-500">Modernization Feasibility</span>
           </div>
           <div className="flex items-end gap-3">
             <span className="text-5xl font-medium text-zinc-950 italic leading-none">{score}%</span>
@@ -85,10 +85,10 @@ export const MigrationHero: React.FC<{ data: StructuredData }> = ({ data }) => {
               const f = typeof feature === 'string' ? { label: feature, desc: 'Logic extraction pending.' } : feature;
               return (
                 <div key={i} className="bg-zinc-50 border-2 border-zinc-200 p-5 rounded-sm hover:border-zinc-950 transition-all group shadow-[4px_4px_0px_0px_rgba(0,0,0,0.05)] hover:shadow-[4px_4px_0px_0px_rgba(9,9,11,1)]">
-                  <h5 className="text-[10px] font-medium uppercase text-zinc-950 mb-2 leading-none border-l-4 border-amber-400 pl-3">
+                  <h5 className="text-[12px] font-medium uppercase text-zinc-950 mb-2 leading-none border-l-4 border-amber-400 pl-3">
                     {f.label}
                   </h5>
-                  <p className="text-[10px] font-medium text-zinc-500 leading-relaxed italic">
+                  <p className="text-[12px] font-medium text-zinc-500 leading-relaxed italic">
                     {f.desc}
                   </p>
                 </div>
@@ -117,8 +117,8 @@ export const MigrationHero: React.FC<{ data: StructuredData }> = ({ data }) => {
               <div className="flex-1 pb-8">
                 <div className="bg-white border-4 border-zinc-950 p-8 rounded-sm shadow-[8px_8px_0px_0px_rgba(9,9,11,1)] group-hover:shadow-[8px_8px_0px_0px_rgba(251,191,36,1)] transition-all relative overflow-hidden">
                   <div className={`absolute top-0 right-0 px-4 py-1 text-[8px] font-medium uppercase tracking-widest border-l-4 border-b-4 border-zinc-950 ${phase.priority === 'Critical' ? 'bg-red-500 text-white' :
-                      phase.priority === 'High' ? 'bg-amber-400 text-zinc-950' :
-                        'bg-emerald-500 text-white'
+                    phase.priority === 'High' ? 'bg-amber-400 text-zinc-950' :
+                      'bg-emerald-500 text-white'
                     }`}>
                     {phase.priority}
                   </div>
@@ -131,10 +131,10 @@ export const MigrationHero: React.FC<{ data: StructuredData }> = ({ data }) => {
                     {Array.isArray(phase.tasks) ? phase.tasks.map((task, j) => (
                       <li key={j} className="flex items-start gap-3 p-3 bg-zinc-50 border-2 border-dashed border-zinc-100 rounded-sm hover:border-zinc-950 hover:bg-white transition-all group/task">
                         <ArrowRight size={14} className="shrink-0 mt-0.5 text-amber-500 group-hover/task:translate-x-1 transition-transform" />
-                        <span className="text-[10px] font-bold text-zinc-700 uppercase leading-snug tracking-tight italic">{task}</span>
+                        <span className="text-[12px] font-bold text-zinc-700 uppercase leading-snug tracking-tight italic">{task}</span>
                       </li>
                     )) : (
-                      <li className="p-3 text-[10px] font-bold text-zinc-400 uppercase italic">Extraction in progress...</li>
+                      <li className="p-3 text-[12px] font-bold text-zinc-400 uppercase italic">Extraction in progress...</li>
                     )}
                   </ul>
                 </div>
@@ -143,7 +143,7 @@ export const MigrationHero: React.FC<{ data: StructuredData }> = ({ data }) => {
           )) : (
             <div className="p-12 border-4 border-dashed border-zinc-200 rounded-sm text-center">
               <AlertTriangle className="mx-auto text-zinc-200 mb-4" size={48} />
-              <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-400 italic">Initiate a surgical scan to generate modernization roadmap.</p>
+              <p className="text-[12px] font-medium uppercase tracking-widest text-zinc-400 italic">Initiate a surgical scan to generate modernization roadmap.</p>
             </div>
           )}
         </div>
@@ -154,13 +154,13 @@ export const MigrationHero: React.FC<{ data: StructuredData }> = ({ data }) => {
         <section className="bg-zinc-950 p-8 border-4 border-zinc-950 shadow-[10px_10px_0px_0px_rgba(251,191,36,1)] rounded-sm">
           <div className="flex items-center gap-3 mb-8">
             <Layers size={18} className="text-amber-400" />
-            <span className="text-[10px] font-medium uppercase tracking-widest text-white italic underline decoration-amber-400">Business Logic Registry</span>
+            <span className="text-[12px] font-medium uppercase tracking-widest text-white italic underline decoration-amber-400">Business Logic Registry</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
             {businessRules.map((rule, i) => (
               <div key={i} className="flex items-center gap-4 text-white border-b border-zinc-800 pb-3 group">
                 <div className="w-5 h-5 border border-amber-400 flex items-center justify-center shrink-0 group-hover:bg-amber-400 group-hover:text-zinc-950 transition-all">
-                  <span className="text-[10px] font-medium italic">{i + 1}</span>
+                  <span className="text-[12px] font-medium italic">{i + 1}</span>
                 </div>
                 <p className="text-[11px] font-bold uppercase tracking-tight opacity-70 group-hover:opacity-100 transition-opacity leading-tight pr-4">
                   {rule}

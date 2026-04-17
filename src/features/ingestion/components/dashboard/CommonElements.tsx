@@ -136,7 +136,7 @@ export interface StructuredData {
 }
 
 export const Tag: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <span className="px-2 py-0.5 bg-zinc-950 text-white text-[9px] font-medium uppercase tracking-widest rounded-sm border-2 border-zinc-950 shadow-[2px_2px_0px_0px_rgba(251,191,36,1)] transition-transform hover:-translate-y-0.5">
+  <span className="px-2 py-0.5 bg-zinc-950 text-white text-[11px] font-medium uppercase tracking-widest rounded-sm border-2 border-zinc-950 shadow-[2px_2px_0px_0px_rgba(251,191,36,1)] transition-transform hover:-translate-y-0.5">
     {children}
   </span>
 );
@@ -173,12 +173,12 @@ export const SummaryBox: React.FC<{ summary?: any; activeAction?: string }> = ({
         <div className="flex items-center justify-between mb-6">
           <div className="bg-amber-400 border-2 border-zinc-950 px-3 py-1.5 flex items-center gap-2 shadow-[4px_4px_0px_0px_rgba(9,9,11,1)]">
             <Zap className="w-3.5 h-3.5 text-zinc-950 fill-zinc-950" />
-            <span className="text-[10px] font-medium uppercase tracking-tighter text-zinc-950">
+            <span className="text-[12px] font-medium uppercase tracking-tighter text-zinc-950">
               &quot;High-Depth Strategic Migration Intelligence&quot;
             </span>
           </div>
           {activeAction && (
-            <span className="px-2 py-0.5 bg-zinc-950 text-white text-[10px] font-semibold uppercase tracking-widest rounded-sm border border-zinc-950">
+            <span className="px-2 py-0.5 bg-zinc-950 text-white text-[12px] font-semibold uppercase tracking-widest rounded-sm border border-zinc-950">
               FOCUS: {activeAction.toUpperCase()} NODE
             </span>
           )}
@@ -186,17 +186,17 @@ export const SummaryBox: React.FC<{ summary?: any; activeAction?: string }> = ({
 
         {isObject ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             {Object.entries(summary).map(([key, value]) => {
-               const label = key.replace(/_/g, ' ').toUpperCase();
-               return (
-                 <div key={key} className="bg-white border border-zinc-200 p-4 rounded-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,0.05)] transition-all hover:bg-zinc-50">
-                    <span className="block text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-1">{label}</span>
-                    <span className="text-[14px] font-bold text-zinc-950 uppercase italic tracking-tight">
-                      <SafeText text={value} fallback="—" />
-                    </span>
-                 </div>
-               );
-             })}
+            {Object.entries(summary).map(([key, value]) => {
+              const label = key.replace(/_/g, ' ').toUpperCase();
+              return (
+                <div key={key} className="bg-white border border-zinc-200 p-4 rounded-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,0.05)] transition-all hover:bg-zinc-50">
+                  <span className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-1">{label}</span>
+                  <span className="text-[14px] font-bold text-zinc-950 uppercase italic tracking-tight">
+                    <SafeText text={value} fallback="—" />
+                  </span>
+                </div>
+              );
+            })}
           </div>
         ) : (
           <p className="text-sm font-bold leading-relaxed text-zinc-900 pr-4 italic">

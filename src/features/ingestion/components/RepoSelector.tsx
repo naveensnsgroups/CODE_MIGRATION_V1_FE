@@ -71,7 +71,7 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
     }
   };
 
-  const filteredRepos = repos.filter(repo => 
+  const filteredRepos = repos.filter(repo =>
     repo.full_name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -80,7 +80,7 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-zinc-950/80 backdrop-blur-md animate-in fade-in duration-300">
       <div className="w-full max-w-2xl bg-white border-4 border-zinc-950 shadow-[12px_12px_0px_0px_rgba(9,9,11,1)] rounded-sm overflow-hidden flex flex-col translate-y-0 animate-in slide-in-from-bottom-8 duration-500">
-        
+
         {/* ── Header ── */}
         <div className="bg-zinc-950 px-8 py-6 flex items-center justify-between border-b-2 border-zinc-950">
           <div className="flex items-center gap-3">
@@ -89,11 +89,11 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
             </div>
             <div>
               <h2 className="text-sm font-medium uppercase tracking-widest text-white italic">Intelligence Hub / Repositories</h2>
-              <p className="text-[10px] font-semibold text-amber-400/80 uppercase tracking-tight">Accessing GitHub Intelligence (Owned + Shared)</p>
+              <p className="text-[12px] font-semibold text-amber-400/80 uppercase tracking-tight">Accessing GitHub Intelligence (Owned + Shared)</p>
             </div>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="p-2 text-zinc-400 hover:text-white transition-colors"
           >
             <X size={20} />
@@ -109,7 +109,7 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
               placeholder="Search all accessible repositories..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white border-2 border-zinc-200 rounded-sm pl-12 pr-4 py-3 text-[10px] font-semibold uppercase tracking-widest focus:border-zinc-950 outline-none transition-all"
+              className="w-full bg-white border-2 border-zinc-200 rounded-sm pl-12 pr-4 py-3 text-[12px] font-semibold uppercase tracking-widest focus:border-zinc-950 outline-none transition-all"
             />
           </div>
         </div>
@@ -152,10 +152,10 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
                         </h3>
                       </div>
                       <div className="flex items-center gap-3 mt-1">
-                        <span className="text-[9px] font-semibold text-zinc-500 uppercase tracking-widest">
+                        <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest">
                           {repo.language || 'Documentation'}
                         </span>
-                        <span className="text-[9px] font-medium text-zinc-500 uppercase tracking-widest">
+                        <span className="text-[11px] font-medium text-zinc-500 uppercase tracking-widest">
                           Updated {new Date(repo.updated_at).toLocaleDateString()}
                         </span>
                       </div>
@@ -164,11 +164,11 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
                   <ChevronRight size={16} className="text-zinc-200 group-hover:text-zinc-950 transition-colors translate-x-0 group-hover:translate-x-1" />
                 </button>
               ))}
-              
+
               {/* 🧪 Troubleshooting Note */}
               <div className="mt-6 p-4 bg-zinc-50 border border-zinc-100 rounded-sm">
-                <p className="text-[9px] font-medium text-zinc-400 uppercase tracking-widest text-center leading-relaxed">
-                  Don&apos;t see a shared repository? <br/>
+                <p className="text-[11px] font-medium text-zinc-400 uppercase tracking-widest text-center leading-relaxed">
+                  Don&apos;t see a shared repository? <br />
                   Ensure you&apos;ve <span className="text-amber-600">accepted the invite</span> on GitHub and your token has <span className="text-amber-600">repo</span> access.
                 </p>
               </div>
@@ -181,7 +181,7 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
           <p className="text-[8px] font-semibold text-zinc-400 uppercase tracking-widest">
             {filteredRepos.length} Repositories Available
           </p>
-          <button 
+          <button
             onClick={fetchRepos}
             disabled={loading}
             title="Refresh repository list"

@@ -37,7 +37,7 @@ function cleanAndParse(raw: string | object | null, contextRaw?: string | null):
 
     try {
       const parsed = JSON.parse(cleaned);
-      
+
       // 🧪  Surgical Unwrap: Detect {"items": [{"json": ...}]}
       if (parsed && Array.isArray(parsed.items) && parsed.items.length > 0) {
         const firstItem = parsed.items[0];
@@ -57,16 +57,16 @@ function cleanAndParse(raw: string | object | null, contextRaw?: string | null):
 
   // 1. Initial Parse & Unwrap
   let parsed = extract(raw);
-  
+
   // 🧪 Surgical Unwrap: Deep Dive into  results (items, result, response)
   if (parsed && typeof parsed === 'object') {
-    parsed = (parsed as any)?.items?.[0]?.json || 
-             (parsed as any)?.items?.[0] || 
-             (parsed as any)?.result?.response || 
-             (parsed as any)?.result || 
-             (parsed as any)?.response || 
-             parsed;
-    
+    parsed = (parsed as any)?.items?.[0]?.json ||
+      (parsed as any)?.items?.[0] ||
+      (parsed as any)?.result?.response ||
+      (parsed as any)?.result ||
+      (parsed as any)?.response ||
+      parsed;
+
     // Recursive extraction if still a string
     parsed = extract(parsed);
   }
@@ -82,14 +82,14 @@ function cleanAndParse(raw: string | object | null, contextRaw?: string | null):
 
   // 3. 🧪 Precision Promotion: If top-level keys are missing but buried in arrays, promote them
   if (parsed && typeof parsed === 'object') {
-     const dataObj = parsed as any;
-     // If we detect a specific agent payload structure, extract the payload
-     if (!dataObj.apis && !dataObj.models && !dataObj.routes && !dataObj.endpoints && !dataObj.files && !dataObj.target_stack) {
-        const buried = dataObj.result?.response || dataObj.result || dataObj.response || dataObj.data;
-        if (buried && typeof buried === 'object') {
-           parsed = { ...buried, ...dataObj }; // Merge so we keep original metadata like 'action'
-        }
-     }
+    const dataObj = parsed as any;
+    // If we detect a specific agent payload structure, extract the payload
+    if (!dataObj.apis && !dataObj.models && !dataObj.routes && !dataObj.endpoints && !dataObj.files && !dataObj.target_stack) {
+      const buried = dataObj.result?.response || dataObj.result || dataObj.response || dataObj.data;
+      if (buried && typeof buried === 'object') {
+        parsed = { ...buried, ...dataObj }; // Merge so we keep original metadata like 'action'
+      }
+    }
   }
 
   // 4. Final Content Validation
@@ -120,14 +120,14 @@ export const AnalysisReport: React.FC<AnalysisReportProps> = ({ content, activeA
         <div className="flex items-center gap-4">
           <button
             onClick={() => setViewMode('pretty')}
-            className={`px-4 py-1.5 text-[9px] font-medium uppercase tracking-widest rounded-sm transition-all flex items-center gap-2 ${viewMode === 'pretty' ? 'bg-zinc-950 text-white shadow-[3px_3px_0px_0px_rgba(251,191,36,1)]' : 'text-zinc-400 hover:text-zinc-950'
+            className={`px-4 py-1.5 text-[11px] font-medium uppercase tracking-widest rounded-sm transition-all flex items-center gap-2 ${viewMode === 'pretty' ? 'bg-zinc-950 text-white shadow-[3px_3px_0px_0px_rgba(251,191,36,1)]' : 'text-zinc-400 hover:text-zinc-950'
               }`}
           >
             <Eye size={12} /> Dashboard
           </button>
           <button
             onClick={() => setViewMode('raw')}
-            className={`px-4 py-1.5 text-[9px] font-medium uppercase tracking-widest rounded-sm transition-all flex items-center gap-2 ${viewMode === 'raw' ? 'bg-zinc-950 text-white shadow-[3px_3px_0px_0px_rgba(251,191,36,1)]' : 'text-zinc-400 hover:text-zinc-950'
+            className={`px-4 py-1.5 text-[11px] font-medium uppercase tracking-widest rounded-sm transition-all flex items-center gap-2 ${viewMode === 'raw' ? 'bg-zinc-950 text-white shadow-[3px_3px_0px_0px_rgba(251,191,36,1)]' : 'text-zinc-400 hover:text-zinc-950'
               }`}
           >
             <CodeIcon size={12} /> Code
@@ -153,7 +153,7 @@ export const AnalysisReport: React.FC<AnalysisReportProps> = ({ content, activeA
                 components={{
                   h1: ({ children }) => <h1 className="text-base font-medium uppercase tracking-widest text-zinc-950 border-b-2 border-amber-400 pb-2 mb-4 italic">{children}</h1>,
                   h2: ({ children }) => <h2 className="text-sm font-medium uppercase tracking-wider text-zinc-950 mt-8 mb-3">{children}</h2>,
-                  h3: ({ children }) => <h3 className="text-[10px] font-medium uppercase text-zinc-700 mt-5 mb-2 tracking-widest underline decoration-amber-400">{children}</h3>,
+                  h3: ({ children }) => <h3 className="text-[12px] font-medium uppercase text-zinc-700 mt-5 mb-2 tracking-widest underline decoration-amber-400">{children}</h3>,
                   p: ({ children }) => <p className="text-sm leading-relaxed text-zinc-700 mb-4 font-medium">{children}</p>,
                   ul: ({ children }) => <ul className="list-disc ml-5 mb-6 space-y-2">{children}</ul>,
                   li: ({ children }) => <li className="text-xs text-zinc-600 font-bold uppercase tracking-tight">{children}</li>,
@@ -170,7 +170,7 @@ export const AnalysisReport: React.FC<AnalysisReportProps> = ({ content, activeA
         ) : (
           <div className="relative group">
             <div className="absolute top-2 right-2 px-2 py-1 bg-zinc-800 text-[8px] font-medium text-zinc-400 uppercase tracking-widest rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">Raw JSON Format</div>
-            <pre className="bg-zinc-950 text-zinc-300 p-8 rounded-sm text-[10px] font-mono overflow-x-auto leading-relaxed border-2 border-zinc-950 shadow-[6px_6px_0px_0px_rgba(251,191,36,0.1)]">
+            <pre className="bg-zinc-950 text-zinc-300 p-8 rounded-sm text-[12px] font-mono overflow-x-auto leading-relaxed border-2 border-zinc-950 shadow-[6px_6px_0px_0px_rgba(251,191,36,0.1)]">
               {content}
             </pre>
           </div>

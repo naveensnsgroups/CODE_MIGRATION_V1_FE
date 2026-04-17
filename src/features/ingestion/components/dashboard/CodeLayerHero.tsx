@@ -36,12 +36,12 @@ export const CodeLayerHero: React.FC<{ data: StructuredData }> = ({ data }) => {
           </div>
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-white bg-opacity-5 border border-zinc-800 p-5 rounded-sm">
-              <span className="text-[9px] font-semibold uppercase tracking-[0.35em] text-zinc-400">Backend Files</span>
-              <p className="mt-3 text-sm text-zinc-300 leading-relaxed">{data.backend?.length ?? 0} backend components detected.</p>
+              <span className="text-[12px] font-semibold uppercase tracking-[0.35em] text-zinc-800">Backend Files</span>
+              <p className="mt-3 text-sm text-zinc-800 leading-relaxed">{data.backend?.length ?? 0} backend components detected.</p>
             </div>
             <div className="bg-white bg-opacity-5 border border-zinc-800 p-5 rounded-sm">
-              <span className="text-[9px] font-semibold uppercase tracking-[0.35em] text-zinc-400">Shared Dependencies</span>
-              <p className="mt-3 text-sm text-zinc-300 leading-relaxed">{data.shared_dependencies?.length ?? 0} shared dependency records.</p>
+              <span className="text-[12px] font-semibold uppercase tracking-[0.35em] text-zinc-800">Shared Dependencies</span>
+              <p className="mt-3 text-sm text-zinc-800 leading-relaxed">{data.shared_dependencies?.length ?? 0} shared dependency records.</p>
             </div>
           </div>
         </div>
@@ -56,40 +56,40 @@ export const CodeLayerHero: React.FC<{ data: StructuredData }> = ({ data }) => {
                 <div className="flex items-center justify-between gap-4 mb-4">
                   <div>
                     <h4 className="text-[13px] font-semibold uppercase tracking-[0.2em] text-zinc-950">{entry.file_name || 'Unknown file'}</h4>
-                    <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-bold">{entry.type || 'component'}</p>
+                    <p className="text-[12px] uppercase tracking-[0.25em] text-zinc-500 font-bold">{entry.type || 'component'}</p>
                   </div>
-                  <span className="text-[9px] font-semibold uppercase tracking-[0.35em] px-2 py-1 bg-zinc-950 text-white rounded-sm">{entry.libraries?.length ?? 0} libs</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.35em] px-2 py-1 bg-zinc-950 text-white rounded-sm">{entry.libraries?.length ?? 0} libs</span>
                 </div>
                 <p className="text-[11px] text-zinc-600 leading-relaxed mb-4">{entry.purpose || 'No purpose description available.'}</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-zinc-50 border border-zinc-200 rounded-sm p-4">
-                    <div className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold">
+                    <div className="flex items-center gap-2 mb-2 text-[12px] uppercase tracking-[0.3em] text-zinc-500 font-bold">
                       <GitBranch size={12} /> Imports
                     </div>
                     {Array.isArray(entry.imports) && entry.imports.length > 0 ? (
-                      <ul className="text-[10px] font-medium text-zinc-700 space-y-2">
+                      <ul className="text-[12px] font-medium text-zinc-700 space-y-2">
                         {entry.imports.map((imp: string, impIndex: number) => (
                           <li key={impIndex}>{imp}</li>
                         ))}
                       </ul>
                     ) : (
-                      <span className="text-[10px] text-zinc-400">No imports detected.</span>
+                      <span className="text-[12px] text-zinc-400">No imports detected.</span>
                     )}
                   </div>
                   <div className="bg-zinc-50 border border-zinc-200 rounded-sm p-4">
-                    <div className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold">
+                    <div className="flex items-center gap-2 mb-2 text-[12px] uppercase tracking-[0.3em] text-zinc-500 font-bold">
                       <ShieldCheck size={12} /> Libraries
                     </div>
                     {Array.isArray(entry.libraries) && entry.libraries.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {entry.libraries.map((lib: string, libIndex: number) => (
-                          <span key={libIndex} className="px-2 py-1 bg-amber-50 text-amber-700 text-[10px] font-semibold uppercase tracking-tight rounded-sm border border-amber-100">
+                          <span key={libIndex} className="px-2 py-1 bg-amber-50 text-amber-700 text-[12px] font-semibold uppercase tracking-tight rounded-sm border border-amber-100">
                             {lib}
                           </span>
                         ))}
                       </div>
                     ) : (
-                      <span className="text-[10px] text-zinc-400">No libraries detected.</span>
+                      <span className="text-[12px] text-zinc-400">No libraries detected.</span>
                     )}
                   </div>
                 </div>
@@ -112,12 +112,12 @@ export const CodeLayerHero: React.FC<{ data: StructuredData }> = ({ data }) => {
                 <div className="flex items-center justify-between gap-4 mb-3">
                   <div>
                     <h4 className="text-[12px] font-semibold uppercase tracking-[0.2em] text-zinc-950">{dep.file_name || dep.component || 'Shared file'}</h4>
-                    <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500">{dep.type || 'dependency record'}</p>
+                    <p className="text-[12px] uppercase tracking-[0.25em] text-zinc-500">{dep.type || 'dependency record'}</p>
                   </div>
-                  <span className="text-[9px] font-medium uppercase tracking-[0.3em] text-zinc-500">Used in {dep.used_in?.length || 0} places</span>
+                  <span className="text-[11px] font-medium uppercase tracking-[0.3em] text-zinc-500">Used in {dep.used_in?.length || 0} places</span>
                 </div>
                 {Array.isArray(dep.used_in) && dep.used_in.length > 0 ? (
-                  <div className="text-[10px] text-zinc-600 space-y-2">
+                  <div className="text-[12px] text-zinc-600 space-y-2">
                     {dep.used_in.map((reuse: string, reuseIndex: number) => (
                       <div key={reuseIndex} className="flex items-center gap-2">
                         <span className="block h-1 w-1 rounded-full bg-amber-500" />
@@ -126,7 +126,7 @@ export const CodeLayerHero: React.FC<{ data: StructuredData }> = ({ data }) => {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-[10px] text-zinc-400">No usage locations provided.</p>
+                  <p className="text-[12px] text-zinc-400">No usage locations provided.</p>
                 )}
               </div>
             ))}

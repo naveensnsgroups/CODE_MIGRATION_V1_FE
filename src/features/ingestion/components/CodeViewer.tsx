@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { 
-    Code, 
-    X, 
-    Copy, 
-    CheckCircle2, 
-    Loader2, 
-    AlertTriangle, 
+import {
+    Code,
+    X,
+    Copy,
+    CheckCircle2,
+    Loader2,
+    AlertTriangle,
     ArrowLeft,
     FileCode
 } from 'lucide-react';
@@ -61,7 +61,7 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ projectId, filePath, onC
             {/* ── Console Header ── */}
             <div className="bg-zinc-950 px-6 py-4 flex items-center justify-between border-b border-zinc-800">
                 <div className="flex items-center gap-4">
-                    <button 
+                    <button
                         onClick={onClose}
                         title="Back to Explorer"
                         className="p-1 text-zinc-500 hover:text-amber-400 transition-colors group"
@@ -70,8 +70,8 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ projectId, filePath, onC
                     </button>
                     <div className="space-y-0.5">
                         <div className="flex items-center gap-2">
-                             <FileCode size={13} className="text-amber-400" />
-                             <span className="text-[12px] font-semibold text-white uppercase tracking-widest italic leading-none">Source Terminal</span>
+                            <FileCode size={13} className="text-amber-400" />
+                            <span className="text-[12px] font-semibold text-white uppercase tracking-widest italic leading-none">Source Terminal</span>
                         </div>
                         <p className="font-mono text-[11px] text-zinc-400 uppercase tracking-relaxed">{filePath}</p>
                     </div>
@@ -102,20 +102,20 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ projectId, filePath, onC
                 {loading ? (
                     <div className="h-full w-full flex flex-col items-center justify-center gap-4">
                         <Loader2 className="w-8 h-8 text-amber-500 animate-spin" strokeWidth={1.5} />
-                        <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.3em] animate-pulse">Streaming Asset Payload...</p>
+                        <p className="text-[11px] font-bold text-zinc-600 uppercase tracking-[0.3em] animate-pulse">Streaming Asset Payload...</p>
                     </div>
                 ) : error ? (
                     <div className="h-full w-full flex flex-col items-center justify-center gap-4 text-center p-8">
                         <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 rounded-sm flex items-center justify-center text-red-500">
-                             <AlertTriangle size={24} />
+                            <AlertTriangle size={24} />
                         </div>
                         <div className="space-y-1">
                             <p className="text-xs font-bold text-white uppercase tracking-widest italic">{error}</p>
-                            <p className="text-[9px] text-zinc-500 uppercase tracking-tighter">Please verify the asset path in the project explorer.</p>
+                            <p className="text-[11px] text-zinc-500 uppercase tracking-tighter">Please verify the asset path in the project explorer.</p>
                         </div>
-                        <button 
+                        <button
                             onClick={onClose}
-                            className="mt-4 px-4 py-2 bg-zinc-900 border border-zinc-800 text-[9px] font-bold text-white uppercase tracking-widest rounded-sm hover:border-zinc-700 transition-all"
+                            className="mt-4 px-4 py-2 bg-zinc-900 border border-zinc-800 text-[11px] font-bold text-white uppercase tracking-widest rounded-sm hover:border-zinc-700 transition-all"
                         >
                             Return to Explorer
                         </button>
@@ -123,25 +123,25 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ projectId, filePath, onC
                 ) : fileData?.type === 'image' ? (
                     <div className="h-full flex flex-col items-center justify-center gap-6 p-12">
                         <div className="p-4 bg-zinc-900 border-2 border-zinc-800 rounded-sm shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] group transition-all">
-                            <img 
-                                src={`data:image/*;base64,${fileData.content}`} 
+                            <img
+                                src={`data:image/*;base64,${fileData.content}`}
                                 alt={filePath}
                                 className="max-w-full max-h-[400px] object-contain group-hover:scale-[1.02] transition-transform duration-500"
                             />
                         </div>
                         <div className="space-y-1 text-center">
-                            <span className="text-[10px] font-bold text-white uppercase tracking-widest italic leading-none">Visual Asset Preview</span>
-                            <p className="text-[9px] font-mono text-zinc-500 uppercase tracking-tighter">Rendered via Base64 Industrial Port</p>
+                            <span className="text-[12px] font-bold text-white uppercase tracking-widest italic leading-none">Visual Asset Preview</span>
+                            <p className="text-[11px] font-mono text-zinc-500 uppercase tracking-tighter">Rendered via Base64 Industrial Port</p>
                         </div>
                     </div>
                 ) : fileData?.type === 'binary' ? (
                     <div className="h-full w-full flex flex-col items-center justify-center gap-4 text-center">
-                         <div className="w-12 h-12 bg-zinc-900 border border-zinc-800 rounded-sm flex items-center justify-center text-zinc-500">
-                             <FileCode size={24} />
+                        <div className="w-12 h-12 bg-zinc-900 border border-zinc-800 rounded-sm flex items-center justify-center text-zinc-500">
+                            <FileCode size={24} />
                         </div>
                         <div className="space-y-1">
                             <p className="text-xs font-bold text-white uppercase tracking-widest italic">Binary Asset Locked</p>
-                            <p className="text-[9px] text-zinc-500 uppercase tracking-tighter">This file format is not supported for visual rendering.</p>
+                            <p className="text-[11px] text-zinc-500 uppercase tracking-tighter">This file format is not supported for visual rendering.</p>
                         </div>
                     </div>
                 ) : (

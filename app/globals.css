@@ -36,7 +36,7 @@ body {
 
   /* Professional Action Buttons: weighted */
   .btn-industrial {
-    @apply inline-flex items-center justify-center px-8 py-4 bg-zinc-950 text-white rounded-sm font-medium uppercase tracking-widest text-[10px] transition-all duration-200
+    @apply inline-flex items-center justify-center px-8 py-4 bg-zinc-950 text-white rounded-sm font-medium uppercase tracking-widest text-[12px] transition-all duration-200
            hover:bg-black hover:scale-[1.01] active:scale-95 shadow-2xl border-b-4 border-zinc-900;
   }
 

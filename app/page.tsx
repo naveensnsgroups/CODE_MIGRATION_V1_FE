@@ -96,7 +96,7 @@ export default function LandingPage() {
           <div className="w-full max-w-2xl bg-white border-4 border-zinc-950 rounded-sm shadow-[12px_12px_0px_0px_rgba(9,9,11,1)] overflow-hidden transition-all hover:shadow-[16px_16px_0px_0px_rgba(9,9,11,1)] text-left">
             {/* Industrial Toolbar */}
             <div className="bg-zinc-950 px-6 py-4 flex items-center justify-between border-b-4 border-zinc-950">
-              <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-white italic">Migration Entry Pipeline</span>
+              <span className="text-[12px] font-medium uppercase tracking-[0.3em] text-white italic">Migration Entry Pipeline</span>
               <div className="flex gap-2">
                 <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
                 <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
@@ -107,49 +107,49 @@ export default function LandingPage() {
             <div className="p-12 space-y-10">
               {/* GitHub Connector Area */}
               {!user ? (
-                 <div className="flex flex-col sm:flex-row items-center justify-between gap-6 p-8 border-4 border-dashed border-zinc-100 rounded-sm bg-zinc-50/50 group hover:border-amber-400 transition-colors text-left">
-                    <div>
-                       <h3 className="text-[12px] font-medium uppercase tracking-widest text-zinc-950 mb-1">Developer Portal</h3>
-                       <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-tight">Connect your account for private repository access</p>
-                    </div>
-                    <Button
-                     onClick={() => window.location.href = 'http://localhost:8000/api/auth/login'}
-                     className="h-14 px-10 text-[10px] font-medium uppercase tracking-[0.2em] !rounded-sm shadow-[6px_6px_0px_0px_rgba(251,191,36,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
-                     variant="primary"
-                   >
-                     Connect GitHub Account
-                   </Button>
-                 </div>
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 p-8 border-4 border-dashed border-zinc-100 rounded-sm bg-zinc-50/50 group hover:border-amber-400 transition-colors text-left">
+                  <div>
+                    <h3 className="text-[12px] font-medium uppercase tracking-widest text-zinc-950 mb-1">Developer Portal</h3>
+                    <p className="text-[12px] font-semibold text-zinc-500 uppercase tracking-tight">Connect your account for private repository access</p>
+                  </div>
+                  <Button
+                    onClick={() => window.location.href = 'http://localhost:8000/api/auth/login'}
+                    className="h-14 px-10 text-[12px] font-medium uppercase tracking-[0.2em] !rounded-sm shadow-[6px_6px_0px_0px_rgba(251,191,36,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
+                    variant="primary"
+                  >
+                    Connect GitHub Account
+                  </Button>
+                </div>
               ) : (
-                 <div className="space-y-6">
-                    <div className="flex items-center justify-between px-2">
-                      <div className="flex items-center gap-3">
-                         <img src={user.avatar_url} alt={user.login} className="w-10 h-10 border-2 border-zinc-950 rounded-sm shadow-[3px_3px_0px_0px_rgba(251,191,36,1)]" />
-                         <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-950 italic">Connected as {user.login}</p>
-                      </div>
-                      <button onClick={handleLogout} className="text-[10px] font-medium uppercase tracking-widest text-zinc-400 hover:text-red-500 transition-colors">Disconnect</button>
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between px-2">
+                    <div className="flex items-center gap-3">
+                      <img src={user.avatar_url} alt={user.login} className="w-10 h-10 border-2 border-zinc-950 rounded-sm shadow-[3px_3px_0px_0px_rgba(251,191,36,1)]" />
+                      <p className="text-[12px] font-medium uppercase tracking-widest text-zinc-950 italic">Connected as {user.login}</p>
                     </div>
+                    <button onClick={handleLogout} className="text-[12px] font-medium uppercase tracking-widest text-zinc-400 hover:text-red-500 transition-colors">Disconnect</button>
+                  </div>
 
-                    <div 
-                      onClick={() => setIsSelectorOpen(true)}
-                      className="p-12 border-4 border-dashed border-zinc-100 rounded-sm flex flex-col items-center justify-center text-center group hover:border-amber-400 transition-colors cursor-pointer bg-zinc-50/50"
-                    >
-                       <svg className="w-10 h-10 text-zinc-200 mb-4 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                       <p className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 group-hover:text-zinc-950">Select From My Repositories</p>
-                       <span className="text-[11px] font-semibold text-zinc-400 mt-2 uppercase tracking-widest">Private & Public Access Active</span>
-                    </div>
-                 </div>
+                  <div
+                    onClick={() => setIsSelectorOpen(true)}
+                    className="p-12 border-4 border-dashed border-zinc-100 rounded-sm flex flex-col items-center justify-center text-center group hover:border-amber-400 transition-colors cursor-pointer bg-zinc-50/50"
+                  >
+                    <svg className="w-10 h-10 text-zinc-200 mb-4 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    <p className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 group-hover:text-zinc-950">Select From My Repositories</p>
+                    <span className="text-[11px] font-semibold text-zinc-400 mt-2 uppercase tracking-widest">Private & Public Access Active</span>
+                  </div>
+                </div>
               )}
 
               <div className="relative">
-                 <div className="absolute inset-0 flex items-center"><span className="w-full border-t-2 border-zinc-100"></span></div>
-                 <div className="relative flex justify-center text-[11px] font-medium uppercase tracking-[0.4em] text-zinc-500 text-center"><span className="bg-white px-6 italic">Or Public Analysis</span></div>
+                <div className="absolute inset-0 flex items-center"><span className="w-full border-t-2 border-zinc-100"></span></div>
+                <div className="relative flex justify-center text-[11px] font-medium uppercase tracking-[0.4em] text-zinc-500 text-center"><span className="bg-white px-6 italic">Or Public Analysis</span></div>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between px-2">
                   <label className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-950 italic">Source Repository URL</label>
-                  <span className="text-[10px] font-semibold text-zinc-600 uppercase tracking-widest text-center">Public Domain</span>
+                  <span className="text-[12px] font-semibold text-zinc-600 uppercase tracking-widest text-center">Public Domain</span>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <input
@@ -162,7 +162,7 @@ export default function LandingPage() {
                   <Button
                     onClick={handleManualAnalyze}
                     loading={loading}
-                    className="h-14 px-10 text-[10px] font-medium italic uppercase !rounded-sm tracking-[0.2em]"
+                    className="h-14 px-10 text-[12px] font-medium italic uppercase !rounded-sm tracking-[0.2em]"
                     variant="amber"
                     disabled={!repoUrl}
                   >
@@ -174,15 +174,15 @@ export default function LandingPage() {
           </div>
 
           {error && (
-            <div className="mt-8 max-w-2xl w-full p-4 rounded-sm bg-red-50 border border-red-200 text-red-600 text-[10px] font-medium text-center uppercase tracking-widest animate-shake">
+            <div className="mt-8 max-w-2xl w-full p-4 rounded-sm bg-red-50 border border-red-200 text-red-600 text-[12px] font-medium text-center uppercase tracking-widest animate-shake">
               {error}
             </div>
           )}
         </div>
       </main>
 
-      <RepoSelector 
-        isOpen={isSelectorOpen} 
+      <RepoSelector
+        isOpen={isSelectorOpen}
         onClose={() => setIsSelectorOpen(false)}
         onSelect={(repoUrl: string) => {
           startIngestion(repoUrl);
@@ -190,7 +190,7 @@ export default function LandingPage() {
         }}
       />
 
-      <PrivateRepoModal 
+      <PrivateRepoModal
         isOpen={error === "PRIVATE_REPOSITORY"}
         onClose={reset}
         repoUrl={repoUrl}

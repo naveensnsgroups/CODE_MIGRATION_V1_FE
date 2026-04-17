@@ -34,11 +34,11 @@ export const MigrationWizard: React.FC<MigrationWizardProps> = ({ isOpen, onClos
             </div>
             <div>
               <h2 className="text-sm font-medium uppercase tracking-widest text-white italic">Surgical Migration Wizard</h2>
-              <p className="text-[10px] font-semibold text-amber-400/80 uppercase tracking-tight">Select Target Paradigm </p>
+              <p className="text-[12px] font-semibold text-amber-400/80 uppercase tracking-tight">Select Target Paradigm </p>
             </div>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="p-2 text-zinc-400 hover:text-white transition-colors"
             title="Close Wizard"
           >
@@ -54,50 +54,50 @@ export const MigrationWizard: React.FC<MigrationWizardProps> = ({ isOpen, onClos
               <h3 className="text-[11px] font-medium uppercase tracking-widest text-zinc-950 italic">Target Backend Layer</h3>
             </div>
             <div className="grid grid-cols-2 gap-4">
-               <div className="space-y-2">
-                  <label className="text-[9px] font-semibold uppercase text-zinc-500">Language</label>
-                  <select 
-                    value={backend}
-                    title="Select Backend Language"
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setBackend(val);
-                      if (val === 'Python') setFramework('FastAPI');
-                      if (val === 'Node.js') setFramework('Express');
-                      if (val === 'Go') setFramework('Standard Library');
-                    }}
-                    className="w-full h-12 bg-zinc-50 border-2 border-zinc-950 px-4 text-xs font-semibold uppercase tracking-tight focus:bg-amber-50 focus:outline-none transition-colors"
-                  >
-                    <option>Python</option>
-                    <option>Node.js</option>
-                    <option>Go</option>
-                  </select>
-               </div>
-               <div className="space-y-2">
-                  <label className="text-[9px] font-semibold uppercase text-zinc-500">Framework</label>
-                  <select 
-                    value={framework}
-                    title="Select Backend Framework"
-                    onChange={(e) => setFramework(e.target.value)}
-                    className="w-full h-12 bg-zinc-50 border-2 border-zinc-950 px-4 text-xs font-semibold uppercase tracking-tight focus:bg-amber-50 focus:outline-none transition-colors"
-                  >
-                    {backend === 'Python' ? (
-                      <>
-                        <option>FastAPI</option>
-                        <option>Django</option>
-                        <option>Flask</option>
-                      </>
-                    ) : backend === 'Node.js' ? (
-                      <>
-                        <option>Express</option>
-                        <option>NestJS</option>
-                        <option>Next.js Backend</option>
-                      </>
-                    ) : (
-                      <option>Standard Library</option>
-                    )}
-                  </select>
-               </div>
+              <div className="space-y-2">
+                <label className="text-[11px] font-semibold uppercase text-zinc-500">Language</label>
+                <select
+                  value={backend}
+                  title="Select Backend Language"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setBackend(val);
+                    if (val === 'Python') setFramework('FastAPI');
+                    if (val === 'Node.js') setFramework('Express');
+                    if (val === 'Go') setFramework('Standard Library');
+                  }}
+                  className="w-full h-12 bg-zinc-50 border-2 border-zinc-950 px-4 text-xs font-semibold uppercase tracking-tight focus:bg-amber-50 focus:outline-none transition-colors"
+                >
+                  <option>Python</option>
+                  <option>Node.js</option>
+                  <option>Go</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[11px] font-semibold uppercase text-zinc-500">Framework</label>
+                <select
+                  value={framework}
+                  title="Select Backend Framework"
+                  onChange={(e) => setFramework(e.target.value)}
+                  className="w-full h-12 bg-zinc-50 border-2 border-zinc-950 px-4 text-xs font-semibold uppercase tracking-tight focus:bg-amber-50 focus:outline-none transition-colors"
+                >
+                  {backend === 'Python' ? (
+                    <>
+                      <option>FastAPI</option>
+                      <option>Django</option>
+                      <option>Flask</option>
+                    </>
+                  ) : backend === 'Node.js' ? (
+                    <>
+                      <option>Express</option>
+                      <option>NestJS</option>
+                      <option>Next.js Backend</option>
+                    </>
+                  ) : (
+                    <option>Standard Library</option>
+                  )}
+                </select>
+              </div>
             </div>
           </section>
 
@@ -108,29 +108,29 @@ export const MigrationWizard: React.FC<MigrationWizardProps> = ({ isOpen, onClos
                 <Globe size={14} className="text-zinc-400" />
                 <h3 className="text-[11px] font-medium uppercase tracking-widest text-zinc-950 italic">UI Modernization</h3>
               </div>
-              <button 
+              <button
                 onClick={() => setIncludeFrontend(!includeFrontend)}
                 title={includeFrontend ? "Disable Frontend Modernization" : "Enable Frontend Modernization"}
-                className={`flex items-center gap-2 px-3 py-1 rounded-sm border-2 border-zinc-950 text-[10px] font-medium uppercase transition-all ${includeFrontend ? 'bg-emerald-500 text-white shadow-[2px_2px_0px_0px_rgba(9,9,11,1)]' : 'bg-zinc-100 text-zinc-400'}`}
+                className={`flex items-center gap-2 px-3 py-1 rounded-sm border-2 border-zinc-950 text-[12px] font-medium uppercase transition-all ${includeFrontend ? 'bg-emerald-500 text-white shadow-[2px_2px_0px_0px_rgba(9,9,11,1)]' : 'bg-zinc-100 text-zinc-400'}`}
               >
                 {includeFrontend ? <><Check size={12} strokeWidth={4} /> Enabled</> : 'Disabled'}
               </button>
             </div>
             {includeFrontend && (
               <div className="animate-in slide-in-from-top-4 duration-300">
-                <span className="text-[9px] font-semibold uppercase text-zinc-500 mb-2 block">Frontend Stack</span>
+                <span className="text-[11px] font-semibold uppercase text-zinc-500 mb-2 block">Frontend Stack</span>
                 <div className="grid grid-cols-3 gap-3" role="radiogroup" aria-label="Frontend Stack Selection">
-                   {['React/Vite', 'Next.js', 'Vue 3'].map(opt => (
-                     <button
-                        key={opt}
-                        role="radio"
-                        aria-checked={frontend === opt ? "true" : "false"}
-                        onClick={() => setFrontend(opt)}
-                        className={`h-12 border-2 border-zinc-950 text-[10px] font-medium uppercase tracking-tighter transition-all ${frontend === opt ? 'bg-amber-400 text-zinc-950 shadow-[4px_4px_0px_0px_rgba(9,9,11,1)] -translate-x-1 -translate-y-1' : 'bg-white text-zinc-400 hover:bg-zinc-50'}`}
-                     >
-                       {opt}
-                     </button>
-                   ))}
+                  {['React/Vite', 'Next.js', 'Vue 3'].map(opt => (
+                    <button
+                      key={opt}
+                      role="radio"
+                      aria-checked={frontend === opt ? "true" : "false"}
+                      onClick={() => setFrontend(opt)}
+                      className={`h-12 border-2 border-zinc-950 text-[12px] font-medium uppercase tracking-tighter transition-all ${frontend === opt ? 'bg-amber-400 text-zinc-950 shadow-[4px_4px_0px_0px_rgba(9,9,11,1)] -translate-x-1 -translate-y-1' : 'bg-white text-zinc-400 hover:bg-zinc-50'}`}
+                    >
+                      {opt}
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
@@ -141,20 +141,20 @@ export const MigrationWizard: React.FC<MigrationWizardProps> = ({ isOpen, onClos
         <div className="bg-zinc-50 p-8 border-t-4 border-zinc-950 flex flex-col gap-4">
           <div className="flex items-start gap-3 bg-amber-50 p-4 border-2 border-amber-400/50 italic">
             <Sparkles size={16} className="text-amber-600 shrink-0 mt-0.5" />
-            <p className="text-[10px] font-semibold text-amber-900 leading-relaxed uppercase tracking-tight">
+            <p className="text-[12px] font-semibold text-amber-900 leading-relaxed uppercase tracking-tight">
               Surgical migration will utilize existing <span className="underline decoration-zinc-950 text-zinc-950">Architecture</span>, <span className="underline decoration-zinc-950 text-zinc-950">Map</span>, and <span className="underline decoration-zinc-950 text-zinc-950">Logic Snippets</span>.
             </p>
           </div>
           <div className="flex items-center gap-4">
             <button
-               onClick={onClose}
-               className="flex-1 h-16 bg-white border-2 border-zinc-950 text-xs font-medium uppercase tracking-widest hover:bg-zinc-100 transition-colors"
+              onClick={onClose}
+              className="flex-1 h-16 bg-white border-2 border-zinc-950 text-xs font-medium uppercase tracking-widest hover:bg-zinc-100 transition-colors"
             >
               Cancel Mission
             </button>
             <button
-               onClick={handleConfirm}
-               className="flex-[2] h-16 bg-zinc-950 text-white text-xs font-medium uppercase tracking-widest shadow-[6px_6px_0px_0px_rgba(251,191,36,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center gap-3"
+              onClick={handleConfirm}
+              className="flex-[2] h-16 bg-zinc-950 text-white text-xs font-medium uppercase tracking-widest shadow-[6px_6px_0px_0px_rgba(251,191,36,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center gap-3"
             >
               Initiate Extraction <ChevronRight size={18} strokeWidth={3} />
             </button>

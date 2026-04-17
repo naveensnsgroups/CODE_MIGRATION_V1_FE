@@ -20,7 +20,7 @@ export const PrivateRepoModal = ({ isOpen, onClose, repoUrl }: PrivateRepoModalP
   const [resolving, setResolving] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [ownerData, setOwnerData] = useState<{username: string, email: string | null} | null>(null);
+  const [ownerData, setOwnerData] = useState<{ username: string, email: string | null } | null>(null);
   const [manualEmail, setManualEmail] = useState('');
 
   // 🔍 Surgical Owner Resolution on Open
@@ -70,7 +70,7 @@ export const PrivateRepoModal = ({ isOpen, onClose, repoUrl }: PrivateRepoModalP
         body: JSON.stringify({
           repo_url: repoUrl,
           owner_email: targetEmail,
-          request_user: "Anonymous Developer" 
+          request_user: "Anonymous Developer"
         })
       });
 
@@ -94,10 +94,10 @@ export const PrivateRepoModal = ({ isOpen, onClose, repoUrl }: PrivateRepoModalP
         <div className="bg-zinc-950 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between border-b-4 border-zinc-950 shrink-0">
           <div className="flex items-center gap-3">
             <Lock className="text-amber-400" size={18} />
-            <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-white italic">Access Restricted</span>
+            <span className="text-[12px] font-medium uppercase tracking-[0.3em] text-white italic">Access Restricted</span>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             title="Close Access Information"
             className="text-zinc-500 hover:text-white transition-colors"
           >
@@ -109,9 +109,9 @@ export const PrivateRepoModal = ({ isOpen, onClose, repoUrl }: PrivateRepoModalP
         <div className="flex-1 overflow-y-auto p-6 sm:p-10 space-y-8 custom-scrollbar">
           <div className="space-y-4">
             <h2 className="text-xl sm:text-2xl font-medium uppercase tracking-tighter italic text-zinc-950 leading-tight">Private Repository Detected</h2>
-            <p className="text-[10px] sm:text-[11px] font-medium text-zinc-500 uppercase leading-relaxed tracking-wider">
-               The repository <span className="text-zinc-950 font-semibold px-1 bg-zinc-50 border border-zinc-100">{repoUrl.split('/').pop()}</span> is restricted. 
-               You must either have permission or be authenticated to analyze its contents.
+            <p className="text-[12px] sm:text-[11px] font-medium text-zinc-500 uppercase leading-relaxed tracking-wider">
+              The repository <span className="text-zinc-950 font-semibold px-1 bg-zinc-50 border border-zinc-100">{repoUrl.split('/').pop()}</span> is restricted.
+              You must either have permission or be authenticated to analyze its contents.
             </p>
           </div>
 
@@ -123,60 +123,60 @@ export const PrivateRepoModal = ({ isOpen, onClose, repoUrl }: PrivateRepoModalP
                   <div className="p-2 bg-white border-2 border-zinc-200 rounded-sm shadow-[3px_3px_0px_0px_rgba(39,201,63,1)] w-fit">
                     <GithubIcon />
                   </div>
-                  <Button 
-                    onClick={handleConnect} 
-                    variant="primary" 
+                  <Button
+                    onClick={handleConnect}
+                    variant="primary"
                     title="Connect your GitHub account"
-                    className="w-full sm:w-auto h-10 px-6 text-[10px] uppercase tracking-widest font-medium"
+                    className="w-full sm:w-auto h-10 px-6 text-[12px] uppercase tracking-widest font-medium"
                   >
-                     Connect GitHub
+                    Connect GitHub
                   </Button>
                 </div>
-                <p className="hidden sm:block text-[10px] font-semibold text-zinc-500 uppercase tracking-widest mt-4">Connect your own account to check for authorized access automatically.</p>
+                <p className="hidden sm:block text-[12px] font-semibold text-zinc-500 uppercase tracking-widest mt-4">Connect your own account to check for authorized access automatically.</p>
               </div>
 
               {/* Option B: Request */}
               <div className="p-4 sm:p-6 border-2 border-zinc-950 rounded-sm bg-zinc-50/50 shadow-[6px_6px_0px_0px_rgba(251,191,36,0.1)] transition-all">
                 <div className="flex items-center gap-3 mb-6">
-                   <div className="p-2 bg-zinc-950 rounded-sm">
-                      <Mail size={16} className="text-amber-400" />
-                   </div>
-                   <h3 className="text-[10px] sm:text-[11px] font-medium uppercase tracking-widest text-zinc-950">Automated Intelligence Outreach</h3>
+                  <div className="p-2 bg-zinc-950 rounded-sm">
+                    <Mail size={16} className="text-amber-400" />
+                  </div>
+                  <h3 className="text-[12px] sm:text-[11px] font-medium uppercase tracking-widest text-zinc-950">Automated Intelligence Outreach</h3>
                 </div>
 
                 {resolving ? (
                   <div className="flex items-center gap-3 py-4">
                     <Loader2 size={16} className="animate-spin text-amber-500" />
-                    <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 italic">Resolving Repository Owner...</span>
+                    <span className="text-[12px] font-semibold uppercase tracking-widest text-zinc-400 italic">Resolving Repository Owner...</span>
                   </div>
                 ) : (
                   <div className="space-y-4">
                     {ownerData ? (
                       <div className="flex items-center gap-3 p-3 bg-white border-2 border-zinc-100 rounded-sm">
                         <div className="w-8 h-8 bg-zinc-50 border border-zinc-200 rounded-full flex items-center justify-center shrink-0">
-                           <User size={14} className="text-zinc-400" />
+                          <User size={14} className="text-zinc-400" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-[9px] sm:text-[10px] font-semibold text-zinc-500 uppercase tracking-widest">Found Owner</p>
+                          <p className="text-[11px] sm:text-[12px] font-semibold text-zinc-500 uppercase tracking-widest">Found Owner</p>
                           <p className="text-[11px] sm:text-[12px] font-medium text-zinc-950 truncate">@{ownerData.username}</p>
                         </div>
                       </div>
                     ) : (
                       <div className="flex items-center gap-3 p-3 bg-red-50 border border-red-100 rounded-sm text-red-500">
                         <AlertCircle size={14} />
-                        <span className="text-[9px] font-bold uppercase tracking-widest">Could not identify owner automatically</span>
+                        <span className="text-[11px] font-bold uppercase tracking-widest">Could not identify owner automatically</span>
                       </div>
                     )}
 
                     {ownerData?.email ? (
                       <div className="p-3 bg-amber-50/50 border border-amber-100 rounded-sm">
-                        <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-widest mb-1 italic px-1">Target email identified</p>
+                        <p className="text-[12px] font-semibold text-amber-600 uppercase tracking-widest mb-1 italic px-1">Target email identified</p>
                         <p className="text-[11px] sm:text-[12px] font-medium text-zinc-600 truncate">{ownerData.email}</p>
                       </div>
                     ) : (
                       <div className="space-y-3">
-                        <p className="text-[9px] sm:text-[10px] font-semibold text-zinc-500 uppercase tracking-widest italic px-1 leading-relaxed">Owner email is private. Please enter manually:</p>
-                        <input 
+                        <p className="text-[11px] sm:text-[12px] font-semibold text-zinc-500 uppercase tracking-widest italic px-1 leading-relaxed">Owner email is private. Please enter manually:</p>
+                        <input
                           type="email"
                           placeholder="owner-contact@example.com"
                           value={manualEmail}
@@ -186,15 +186,15 @@ export const PrivateRepoModal = ({ isOpen, onClose, repoUrl }: PrivateRepoModalP
                       </div>
                     )}
 
-                    <Button 
-                      onClick={handleRequestAccess} 
+                    <Button
+                      onClick={handleRequestAccess}
                       disabled={!ownerData?.email && !manualEmail}
-                      loading={loading} 
-                      variant="amber" 
+                      loading={loading}
+                      variant="amber"
                       title="Request access via IHUB Mailer"
-                      className="w-full h-12 text-[10px] uppercase tracking-widest font-black"
+                      className="w-full h-12 text-[12px] uppercase tracking-widest font-black"
                     >
-                       Send Request to {ownerData?.email || manualEmail || '...'}
+                      Send Request to {ownerData?.email || manualEmail || '...'}
                     </Button>
                   </div>
                 )}
@@ -207,14 +207,14 @@ export const PrivateRepoModal = ({ isOpen, onClose, repoUrl }: PrivateRepoModalP
               </div>
               <div className="text-center">
                 <p className="text-[12px] font-medium uppercase tracking-widest text-zinc-950">Request Transmitted</p>
-                <p className="text-[10px] font-semibold text-zinc-500 uppercase mt-1">Repository owner has been notified via IHUB Mailer.</p>
+                <p className="text-[12px] font-semibold text-zinc-500 uppercase mt-1">Repository owner has been notified via IHUB Mailer.</p>
               </div>
               <Button onClick={onClose} variant="primary" className="mt-4 px-10">Return to Hub</Button>
             </div>
           )}
 
           {error && (
-            <div className="p-3 bg-red-50 border border-red-100 text-red-500 text-[10px] font-semibold uppercase tracking-widest text-center animate-shake">
+            <div className="p-3 bg-red-50 border border-red-100 text-red-500 text-[12px] font-semibold uppercase tracking-widest text-center animate-shake">
               {error}
             </div>
           )}
@@ -222,7 +222,7 @@ export const PrivateRepoModal = ({ isOpen, onClose, repoUrl }: PrivateRepoModalP
 
         {/* Action Panel Footer - Fixed */}
         <div className="bg-zinc-50 px-4 sm:px-6 py-4 border-t-2 border-zinc-100 flex justify-between items-center shrink-0">
-          <span className="text-[9px] font-medium text-zinc-600 uppercase tracking-[0.3em] italic">Code Migration Intelligence 1.0</span>
+          <span className="text-[11px] font-medium text-zinc-600 uppercase tracking-[0.3em] italic">Code Migration Intelligence 1.0</span>
           <div className="flex gap-2">
             <div className="w-2 h-2 rounded-full bg-zinc-200" />
             <div className="w-2 h-2 rounded-full bg-zinc-200" />

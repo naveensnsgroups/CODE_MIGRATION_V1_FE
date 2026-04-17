@@ -17,7 +17,7 @@ export const Navbar = () => {
             <div className="flex items-center gap-4 animate-in fade-in slide-in-from-right-4">
               <div className="flex items-center gap-3 px-3 py-1 bg-zinc-50 border border-zinc-100 rounded-sm">
                 <img src={user.avatar_url} alt="Avatar" className="w-7 h-7 rounded-sm border border-zinc-200 shadow-sm" />
-                <span className="text-[10px] font-medium uppercase text-zinc-900 italic tracking-widest">{user.login}</span>
+                <span className="text-[12px] font-medium uppercase text-zinc-900 italic tracking-widest">{user.login}</span>
               </div>
               <Button
                 onClick={handleLogout}

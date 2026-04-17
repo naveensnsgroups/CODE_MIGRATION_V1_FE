@@ -41,7 +41,7 @@ export default function WorkbenchPage() {
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center gap-4">
           <Loader2 className="w-12 h-12 text-amber-500 animate-spin" strokeWidth={1} />
-          <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-zinc-400 animate-pulse">Synchronizing Intelligence...</p>
+          <p className="text-[12px] font-medium uppercase tracking-[0.3em] text-zinc-400 animate-pulse">Synchronizing Intelligence...</p>
         </div>
       </div>
     );
@@ -57,11 +57,11 @@ export default function WorkbenchPage() {
           </div>
           <div className="space-y-2">
             <h1 className="text-xl font-medium uppercase tracking-tighter text-zinc-950 italic">Project Not Found</h1>
-            <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 max-w-md mx-auto leading-relaxed">{error}</p>
+            <p className="text-[12px] font-medium uppercase tracking-widest text-zinc-500 max-w-md mx-auto leading-relaxed">{error}</p>
           </div>
-          <button 
+          <button
             onClick={() => router.push('/')}
-            className="flex items-center gap-2 px-6 py-3 bg-zinc-950 text-white text-[10px] font-medium uppercase tracking-widest rounded-sm hover:bg-zinc-800 transition-all group"
+            className="flex items-center gap-2 px-6 py-3 bg-zinc-950 text-white text-[12px] font-medium uppercase tracking-widest rounded-sm hover:bg-zinc-800 transition-all group"
           >
             <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
             Back to Command Center

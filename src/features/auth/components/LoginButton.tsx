@@ -14,9 +14,9 @@ export const LoginButton: React.FC = () => {
       <div className="flex items-center gap-4 animate-fade-in">
         <div className="flex flex-col items-end">
           <span className="text-xs font-semibold text-foreground">@{user.login}</span>
-          <button 
+          <button
             onClick={handleLogout}
-            className="text-[9px] font-semibold uppercase tracking-widest text-muted hover:text-red-500 transition-colors"
+            className="text-[11px] font-semibold uppercase tracking-widest text-muted hover:text-red-500 transition-colors"
           >
             Sign Out
           </button>
