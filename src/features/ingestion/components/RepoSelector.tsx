@@ -48,7 +48,7 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
     }
 
     try {
-      // 🧪 Fetching all accessible repos (owned, shared, organization)
+      //  Fetching all accessible repos (owned, shared, organization)
       // Explicitly adding affiliation to ensure collaborator projects are returned
       const response = await fetch('https://api.github.com/user/repos?sort=updated&per_page=100&affiliation=owner,collaborator,organization_member', {
         headers: {
@@ -165,7 +165,7 @@ export const RepoSelector: React.FC<RepoSelectorProps> = ({ isOpen, onClose, onS
                 </button>
               ))}
 
-              {/* 🧪 Troubleshooting Note */}
+              {/*  Troubleshooting Note */}
               <div className="mt-6 p-4 bg-zinc-50 border border-zinc-100 rounded-sm">
                 <p className="text-[11px] font-medium text-zinc-400 uppercase tracking-widest text-center leading-relaxed">
                   Don&apos;t see a shared repository? <br />

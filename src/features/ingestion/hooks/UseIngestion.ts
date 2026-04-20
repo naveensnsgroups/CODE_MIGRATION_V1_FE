@@ -15,7 +15,7 @@ export const useIngestion = () => {
       const response = await ingestRepository(repoUrl, token);
       setData(response);
     } catch (err: any) {
-      // 🧪 Surgical Error Extraction (Catching FastAPI HTTPException detail)
+      //  Surgical Error Extraction (Catching FastAPI HTTPException detail)
       const detail = err.response?.data?.detail || err.message || 'An error occurred during ingestion.';
       setError(detail);
     } finally {

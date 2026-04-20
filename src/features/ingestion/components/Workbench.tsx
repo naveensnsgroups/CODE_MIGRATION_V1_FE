@@ -51,7 +51,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
 
         setAnalysisResults(prev => ({ ...prev, ...loadedResults }));
 
-        // 🧠 Strategic Auto-Switch (v26.1): If 'routes' found in sync, prioritize that view
+        //  Strategic Auto-Switch (v26.1): If 'routes' found in sync, prioritize that view
         if (loadedResults['routes']) {
           setActiveAction('routes');
           console.log(`[Intelligence Hub] Auto-switching to MAP ROUTES view.`);
@@ -87,7 +87,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.project_id, data.reports]);
 
-  // ─── 🔄 Intelligence Polling Engine (v22.0) ───
+  // ───  Intelligence Polling Engine (v22.0) ───
   React.useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
@@ -134,10 +134,10 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
       setIsAnalyzing(action);
       setActiveAction(action);
       
-      // 🚀 Surgical Context Protocol: Fetch mission context for all actions
+      //  Surgical Context Protocol: Fetch mission context for all actions
       const context = await analysisClient.getLocalContext(data.project_id);
 
-      // 🧠 Cumulative Intelligence: If migration scan, gather all previous intelligence
+      //  Cumulative Intelligence: If migration scan, gather all previous intelligence
       let previousIntelligence = '';
       if (action === 'migration') {
         const intelParts = Object.entries(analysisResults)
@@ -150,7 +150,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
         }
       }
 
-      // 🚀 Trigger AI Scan (Planner uses minimal project_id/action payload in Client)
+      //  Trigger AI Scan (Planner uses minimal project_id/action payload in Client)
       const output = await analysisClient.analyzeWithAgent(
         data.project_id,
         context,
@@ -162,7 +162,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
       // Update UI
       setAnalysisResults(prev => ({ ...prev, [action]: output }));
 
-      // 💾 Auto-Save to Database
+      //  Auto-Save to Database
       autoSave(action, output);
 
     } catch (error: any) {
@@ -391,7 +391,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
                 <AnalysisReport
                   content={analysisResults[activeAction] as string}
                   activeAction={activeAction}
-                  // 🧠 Cumulative Intelligence: Merge current state with general scan for high-depth context
+                  //  Cumulative Intelligence: Merge current state with general scan for high-depth context
                   fullContext={activeAction !== 'general' ? analysisResults['general'] || null : null}
                 />
               </div>
@@ -458,7 +458,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
         </div>
       </div>
 
-      {/* 🔮 Intelligence Confirmation Modal */}
+      {/*  Intelligence Confirmation Modal */}
       <ConfirmationModal
         isOpen={!!showRerunModal}
         onClose={() => setShowRerunModal(null)}

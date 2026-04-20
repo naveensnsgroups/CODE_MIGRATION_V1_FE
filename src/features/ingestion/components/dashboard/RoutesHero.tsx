@@ -3,7 +3,7 @@ import { Map, ArrowRight, Database, Zap, Shield, Server, Cpu, Layers } from 'luc
 import { SectionHeading, StructuredData, SafeText, Tag } from './CommonElements';
 
 export const RoutesHero: React.FC<{ data: StructuredData }> = ({ data }) => {
-  // 🧪 Strategic Mapping (v26.8): Direct binding to root-level MongoDB keys
+  //  Strategic Mapping (v26.8): Direct binding to root-level MongoDB keys
   const apis = data.apis || [];
   const models = data.models || [];
   const externalServices = data.external_services || [];

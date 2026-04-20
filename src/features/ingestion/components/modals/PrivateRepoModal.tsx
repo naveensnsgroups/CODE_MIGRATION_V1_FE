@@ -23,7 +23,7 @@ export const PrivateRepoModal = ({ isOpen, onClose, repoUrl }: PrivateRepoModalP
   const [ownerData, setOwnerData] = useState<{ username: string, email: string | null } | null>(null);
   const [manualEmail, setManualEmail] = useState('');
 
-  // 🔍 Surgical Owner Resolution on Open
+  //  Surgical Owner Resolution on Open
   useEffect(() => {
     if (isOpen && repoUrl) {
       resolveOwner();

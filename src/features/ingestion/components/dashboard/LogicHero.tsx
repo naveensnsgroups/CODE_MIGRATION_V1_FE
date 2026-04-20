@@ -3,7 +3,7 @@ import { ListTodo, Cpu, Layout, ArrowRight, Zap, Code, Shield } from 'lucide-rea
 import { SectionHeading, StructuredData, SafeText } from './CommonElements';
 
 export const LogicHero: React.FC<{ data: StructuredData }> = ({ data }) => {
-  // 🔍 Deep Discovery: Find segments even if nested
+  //  Deep Discovery: Find segments even if nested
   const findSegment = (obj: any, key: 'backend' | 'frontend' | 'assets'): any[] => {
     if (!obj || typeof obj !== 'object') return [];
     if (Array.isArray(obj[key])) return obj[key];

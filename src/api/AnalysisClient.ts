@@ -73,7 +73,7 @@ export const analysisClient = {
     const rawContext =
       typeof context === 'object' && context !== null && 'context' in context ? context.context : context;
 
-    // 🚀 Surgical Payload Protocol: Planner requires identifiers + context
+    //  Surgical Payload Protocol: Planner requires identifiers + context
     const payload = action === 'planner' 
       ? { 
           project_id: projectId, 
@@ -94,7 +94,7 @@ export const analysisClient = {
     console.log(`[Analysis] Routing via Proxy for ${action}: ${fullUrl}`);
 
     try {
-      // 🚀 Surgical Proxy Bridge: Calls /api/analysis/proxy
+      //  Surgical Proxy Bridge: Calls /api/analysis/proxy
       const response = await apiClient.post('analysis/proxy', {
         full_url: fullUrl,
         payload: payload

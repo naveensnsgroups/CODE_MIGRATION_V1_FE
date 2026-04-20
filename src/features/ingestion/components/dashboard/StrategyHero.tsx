@@ -23,7 +23,7 @@ export const StrategyHero: React.FC<{ data: StructuredData }> = ({ data }) => {
    const [activeFile, setActiveFile] = useState<number | null>(0);
    const [copied, setCopied] = useState<string | null>(null);
 
-   // 🔍 Technical Data Extraction (v28.2 Migration Schema)
+   //  Technical Data Extraction (v28.2 Migration Schema)
    const files = data.files || [];
    const targetStack = data.target_stack || { backend: 'Python', framework: 'FastAPI', runtime: '3.10+' };
    const envCleanup = data.environment_setup || { steps: [], commands: [] };
@@ -52,7 +52,7 @@ export const StrategyHero: React.FC<{ data: StructuredData }> = ({ data }) => {
    return (
       <div className="space-y-16 animate-in fade-in slide-in-from-bottom-6 duration-1000">
 
-         {/* ── 🚀 Industrial Target Stack Header ── */}
+         {/* ──  Industrial Target Stack Header ── */}
          <div className="relative overflow-hidden bg-zinc-950 border-b-8 border-amber-400 p-8 rounded-sm shadow-[12px_12px_0px_0px_rgba(39,39,42,0.1)]">
             <div className="absolute top-0 right-0 w-64 h-64 bg-amber-400 opacity-5 -mr-20 -mt-20 rounded-full blur-3xl animate-pulse" />
             <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
@@ -84,7 +84,7 @@ export const StrategyHero: React.FC<{ data: StructuredData }> = ({ data }) => {
             </div>
          </div>
 
-         {/* ── 💻 Generated File Registry & Code Viewer ── */}
+         {/* ──  Generated File Registry & Code Viewer ── */}
          <div className="space-y-8">
             <SectionHeading icon={<FileCode size={14} strokeWidth={3} />} title="High-Depth File Extraction Registry" />
 
@@ -143,7 +143,7 @@ export const StrategyHero: React.FC<{ data: StructuredData }> = ({ data }) => {
             </div>
          </div>
 
-         {/* ── 🕹️ Command Console & Dependency Manifest ── */}
+         {/* ── ️ Command Console & Dependency Manifest ── */}
          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 pt-6 border-t-2 border-zinc-100">
 
             {/* Environment Setup Console */}
@@ -230,7 +230,7 @@ export const StrategyHero: React.FC<{ data: StructuredData }> = ({ data }) => {
             </div>
          </div>
 
-         {/* ── 🌉 Architectural Bridge (v28.2 Migration Mapping) ── */}
+         {/* ──  Architectural Bridge (v28.2 Migration Mapping) ── */}
          <div className="space-y-8 pt-8 border-t-4 border-zinc-950">
             <SectionHeading icon={<ShieldCheck size={14} strokeWidth={3} />} title="Architectural Migration Bridge" />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

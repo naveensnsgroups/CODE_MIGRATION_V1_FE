@@ -27,7 +27,7 @@ export const ReportDashboard: React.FC<ReportDashboardProps> = ({ data, activeAc
       ) : activeAction === 'migration' ? (
         <StrategyHero data={data} />
       ) : (
-        /* 🚢 Comprehensive Intelligence Hub (General & Default) */
+        /*  Comprehensive Intelligence Hub (General & Default) */
         <ArchitectureHero data={data} />
       )}
     </div>
