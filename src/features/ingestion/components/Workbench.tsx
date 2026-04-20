@@ -133,6 +133,8 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
     try {
       setIsAnalyzing(action);
       setActiveAction(action);
+      
+      // 🚀 Surgical Context Protocol: Fetch mission context for all actions
       const context = await analysisClient.getLocalContext(data.project_id);
 
       // 🧠 Cumulative Intelligence: If migration scan, gather all previous intelligence
@@ -148,7 +150,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
         }
       }
 
-      // 🚀 Trigger AI Scan
+      // 🚀 Trigger AI Scan (Planner uses minimal project_id/action payload in Client)
       const output = await analysisClient.analyzeWithAgent(
         data.project_id,
         context,
@@ -201,25 +203,8 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
     executeAnalysis('migration', settings);
   };
 
-  const handleGeneratePlan = async () => {
-    try {
-      setIsAnalyzing('planner');
-      const migrationResult = analysisResults['migration'];
-      if (!migrationResult) return;
-
-      const output = await analysisClient.analyzeWithAgent(
-        data.project_id,
-        migrationResult, // 🧠 Send the Architect's roadmap as context
-        'planner'
-      );
-
-      setAnalysisResults(prev => ({ ...prev, planner: output }));
-      autoSave('planner', output);
-    } catch (e) {
-      console.error('Planner Agent failed:', e);
-    } finally {
-      setIsAnalyzing(null);
-    }
+  const handleGeneratePlan = () => {
+    executeAnalysis('planner');
   };
 
   const actions = [

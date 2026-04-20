@@ -71,18 +71,25 @@ export const analysisClient = {
           : '';
 
     const rawContext =
-      typeof context === 'object' && 'context' in context ? context.context : context;
+      typeof context === 'object' && context !== null && 'context' in context ? context.context : context;
 
-    const payload = {
-      project_id: projectId,
-      code_context: rawContext,
-      action,
-      guidance_hint: guidanceHints[action] || '',
-      skill_directive: skillDirective,
-      stack_settings: stackSettings || null,
-      previous_intelligence: previousIntelligence || '',
-      timestamp: new Date().toISOString()
-    };
+    // 🚀 Surgical Payload Protocol: Planner requires identifiers + context
+    const payload = action === 'planner' 
+      ? { 
+          project_id: projectId, 
+          action,
+          code_context: rawContext 
+        }
+      : {
+          project_id: projectId,
+          code_context: rawContext,
+          action,
+          guidance_hint: guidanceHints[action] || '',
+          skill_directive: skillDirective,
+          stack_settings: stackSettings || null,
+          previous_intelligence: previousIntelligence || '',
+          timestamp: new Date().toISOString()
+        };
 
     console.log(`[Analysis] Routing via Proxy for ${action}: ${fullUrl}`);
 
