@@ -8,6 +8,8 @@ import { useIngestion } from '@/features/ingestion';
 import { useAuth } from '@/features/auth';
 import { RepoSelector } from '@/features/ingestion/components/RepoSelector';
 import { PrivateRepoModal } from '@/features/ingestion/components/modals/PrivateRepoModal';
+import { ShieldCheck, Zap, User as UserIcon } from 'lucide-react';
+import { WorkbenchMode } from '@/features/ingestion/types/workbench';
 
 export default function LandingPage() {
   const { data, loading, error, startIngestion, reset } = useIngestion();
@@ -18,6 +20,12 @@ export default function LandingPage() {
   const searchParams = useSearchParams();
   const autoStarted = useRef(false);
   const prevUser = useRef(user);
+  
+  const handleManualAnalyze = () => {
+    if (repoUrl.trim()) {
+      startIngestion(repoUrl);
+    }
+  };
 
   // Atomic Logout Reset: ONLY clear data if we transitioned from Logged In -> Logged Out
   useEffect(() => {
@@ -35,25 +43,17 @@ export default function LandingPage() {
     const avatar = searchParams.get('avatar');
 
     if (token && uid && githubUser && !autoStarted.current) {
-      autoStarted.current = true; // Surgical Guard
+      autoStarted.current = true;
       handleLogin({
         access_token: token,
         user: {
-          id: parseInt(uid),
+          id: uid,
           login: githubUser,
-          avatar_url: avatar || ''
+          avatar_url: avatar || '',
+          default_mode: 'enterprise'
         }
       });
-      // Clean URL after login
       router.replace('/');
-      return;
-    }
-
-    // 0.1 Handle direct GitHub code (Relay fallback)
-    const code = searchParams.get('code');
-    if (code && !autoStarted.current) {
-      autoStarted.current = true;
-      window.location.href = `http://localhost:8000/api/auth/callback?code=${code}`;
       return;
     }
 
@@ -72,14 +72,8 @@ export default function LandingPage() {
     }
   }, [data?.project_id, router]);
 
-  const handleManualAnalyze = () => {
-    if (repoUrl.trim()) {
-      startIngestion(repoUrl);
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-white text-zinc-950 selection:bg-amber-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-white text-zinc-950 selection:bg-amber-100 flex flex-col">
       <Navbar />
 
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-20 animate-in fade-in zoom-in-95 duration-1000 w-full text-center">
@@ -105,68 +99,76 @@ export default function LandingPage() {
             </div>
 
             <div className="p-12 space-y-10">
-              {/* GitHub Connector Area */}
+              {/* Mission Selection Handled during Auth Gate */}
+
+              {/* Connector Area */}
               {!user ? (
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-6 p-8 border-4 border-dashed border-zinc-100 rounded-sm bg-zinc-50/50 group hover:border-amber-400 transition-colors text-left">
-                  <div>
-                    <h3 className="text-[12px] font-medium uppercase tracking-widest text-zinc-950 mb-1">Developer Portal</h3>
-                    <p className="text-[12px] font-semibold text-zinc-500 uppercase tracking-tight">Connect your account for private repository access</p>
+                  <div className="flex-1">
+                    <h3 className="text-[12px] font-black uppercase tracking-widest text-zinc-950 mb-1">Developer Portal</h3>
+                    <p className="text-[12px] font-bold text-zinc-400 uppercase tracking-tight italic">Authentication required for full feature access</p>
                   </div>
                   <Button
-                    onClick={() => window.location.href = 'http://localhost:8000/api/auth/login'}
-                    className="h-14 px-10 text-[12px] font-medium uppercase tracking-[0.2em] !rounded-sm shadow-[6px_6px_0px_0px_rgba(251,191,36,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
+                    onClick={() => router.push('/auth')}
+                    className="h-14 px-10 text-[12px] font-black uppercase tracking-[0.2em] !rounded-sm shadow-[6px_6px_0px_0px_rgba(251,191,36,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
                     variant="primary"
                   >
-                    Connect GitHub Account
+                    Initiate Access
                   </Button>
                 </div>
               ) : (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between px-2">
                     <div className="flex items-center gap-3">
-                      <img src={user.avatar_url} alt={user.login} className="w-10 h-10 border-2 border-zinc-950 rounded-sm shadow-[3px_3px_0px_0px_rgba(251,191,36,1)]" />
-                      <p className="text-[12px] font-medium uppercase tracking-widest text-zinc-950 italic">Connected as {user.login}</p>
+                      {user.avatar_url ? (
+                        <img src={user.avatar_url} alt="User" className="w-10 h-10 border-2 border-zinc-950 rounded-sm shadow-[3px_3px_0px_0px_rgba(251,191,36,1)]" />
+                      ) : (
+                        <div className="w-10 h-10 bg-zinc-950 text-white flex items-center justify-center rounded-sm shadow-[3px_3px_0px_0px_rgba(251,191,36,1)]">
+                          <UserIcon size={20} />
+                        </div>
+                      )}
+                      <p className="text-[12px] font-black uppercase tracking-widest text-zinc-950 italic">Operator: {user.full_name || user.login || user.email}</p>
                     </div>
-                    <button onClick={handleLogout} className="text-[12px] font-medium uppercase tracking-widest text-zinc-400 hover:text-red-500 transition-colors">Disconnect</button>
+                    <button onClick={handleLogout} className="text-[12px] font-black uppercase tracking-widest text-zinc-400 hover:text-red-500 transition-colors">Terminate Session</button>
                   </div>
 
                   <div
                     onClick={() => setIsSelectorOpen(true)}
-                    className="p-12 border-4 border-dashed border-zinc-100 rounded-sm flex flex-col items-center justify-center text-center group hover:border-amber-400 transition-colors cursor-pointer bg-zinc-50/50"
+                    className="p-10 border-4 border-dashed border-zinc-100 rounded-sm flex flex-col items-center justify-center text-center group hover:border-amber-400 transition-colors cursor-pointer bg-zinc-50/50"
                   >
                     <svg className="w-10 h-10 text-zinc-200 mb-4 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                    <p className="text-[12px] font-medium uppercase tracking-[0.2em] text-zinc-500 group-hover:text-zinc-950">Select From My Repositories</p>
-                    <span className="text-[11px] font-semibold text-zinc-400 mt-2 uppercase tracking-widest">Private & Public Access Active</span>
+                    <p className="text-[12px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-zinc-950">Select Target Environment</p>
+                    <span className="text-[10px] font-bold text-zinc-400 mt-2 uppercase tracking-widest italic">Encrypted Secure Relay Active</span>
                   </div>
                 </div>
               )}
 
               <div className="relative">
                 <div className="absolute inset-0 flex items-center"><span className="w-full border-t-2 border-zinc-100"></span></div>
-                <div className="relative flex justify-center text-[11px] font-medium uppercase tracking-[0.4em] text-zinc-500 text-center"><span className="bg-white px-6 italic">Or Public Analysis</span></div>
+                <div className="relative flex justify-center text-[10px] font-black uppercase tracking-[0.4em] text-zinc-300 text-center"><span className="bg-white px-6">Direct Analysis Relay</span></div>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between px-2">
-                  <label className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-950 italic">Source Repository URL</label>
-                  <span className="text-[12px] font-semibold text-zinc-600 uppercase tracking-widest text-center">Public Domain</span>
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-950 italic">Target Repository URL</label>
+                  <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Public Domain Access</span>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <input
                     type="text"
-                    placeholder="HTTPS://GITHUB.COM/ORG/REPO"
+                    placeholder="HTTPS://GITHUB.COM/OPERATOR/TARGET"
                     value={repoUrl}
                     onChange={(e) => setRepoUrl(e.target.value)}
-                    className="flex-1 h-14 bg-zinc-50 border-2 border-zinc-200 rounded-sm px-6 font-semibold text-xs uppercase tracking-widest focus:outline-none focus:border-zinc-950 transition-all placeholder:text-zinc-500 font-mono"
+                    className="flex-1 h-14 bg-zinc-50 border-2 border-zinc-200 rounded-sm px-6 font-bold text-xs uppercase tracking-widest focus:outline-none focus:border-zinc-950 transition-all placeholder:text-zinc-500 font-mono"
                   />
                   <Button
                     onClick={handleManualAnalyze}
                     loading={loading}
-                    className="h-14 px-10 text-[12px] font-medium italic uppercase !rounded-sm tracking-[0.2em]"
+                    className="h-14 px-10 text-[12px] font-black uppercase !rounded-sm tracking-[0.2em]"
                     variant="amber"
                     disabled={!repoUrl}
                   >
-                    Public Analysis
+                    Initiate Scan
                   </Button>
                 </div>
               </div>
@@ -174,8 +176,8 @@ export default function LandingPage() {
           </div>
 
           {error && (
-            <div className="mt-8 max-w-2xl w-full p-4 rounded-sm bg-red-50 border border-red-200 text-red-600 text-[12px] font-medium text-center uppercase tracking-widest animate-shake">
-              {error}
+            <div className="mt-8 max-w-2xl w-full p-4 rounded-sm bg-red-50 border-2 border-red-200 text-red-600 text-[10px] font-black text-center uppercase tracking-widest animate-shake">
+              CRITICAL ERROR: {error}
             </div>
           )}
         </div>

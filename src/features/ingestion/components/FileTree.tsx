@@ -65,7 +65,7 @@ const FileTreeNode: React.FC<{
 export const FileTree: React.FC<FileTreeProps> = ({ tree, onFileClick }) => {
   return (
     <div className="w-full h-full bg-white flex flex-col">
-      <div className="flex-1 p-4 overflow-y-auto scroller-industrial font-sans">
+      <div className="flex-1 p-4 overflow-y-auto scroller-industrial">
         {tree?.map((node, index) => (
           <FileTreeNode 
             key={`${node.name}-${index}`} 
