@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${manrope.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col selection:bg-blue-500/10 transition-colors duration-300">
+      <body className={`${manrope.className} min-h-full flex flex-col selection:bg-blue-500/10 transition-colors duration-300`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
