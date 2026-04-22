@@ -36,13 +36,14 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
 
   const handleMigrationConfirm = (settings: WorkbenchSettings) => {
     setIsMigrationWizardOpen(false);
-    executeAnalysis('migration', settings);
+    executeAnalysis(activeAction, settings);
   };
 
   const handleGeneratePlan = () => executeAnalysis('planner');
 
   const handleAnalyzeClick = (actionId: string) => {
-    if (actionId === 'migration') {
+    if (actionId === 'migration' || actionId === 'quick_migration') {
+      setActiveAction(actionId);
       setIsMigrationWizardOpen(true);
       return;
     }

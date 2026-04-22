@@ -59,7 +59,7 @@ export const analysisClient = {
     if      (action === 'routes')     fullUrl = `${baseUrl}/routes`;
     else if (action === 'logic')      fullUrl = `${baseUrl}/logic`;
     else if (action === 'code_layer') fullUrl = `${baseUrl}/code-layer-analyzer`;
-    else if (action === 'migration')  fullUrl = `${baseUrl}/migration`;
+    else if (action === 'migration' || action === 'quick_migration')  fullUrl = `${baseUrl}/migration`;
     else if (action === 'planner')    fullUrl = `${baseUrl}/planner`;
 
     // Directive Hydration

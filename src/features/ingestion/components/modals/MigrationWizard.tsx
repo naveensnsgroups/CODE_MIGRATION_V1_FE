@@ -4,7 +4,7 @@ import { X, Server, Layers, Globe, Check, Sparkles, ChevronRight } from 'lucide-
 interface MigrationWizardProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (settings: { backend: string; framework: string; frontend?: string }) => void;
+  onConfirm: (settings: { backend: string; framework: string; frontend?: string; frontendEnabled: boolean }) => void;
 }
 
 export const MigrationWizard: React.FC<MigrationWizardProps> = ({ isOpen, onClose, onConfirm }) => {
@@ -19,7 +19,8 @@ export const MigrationWizard: React.FC<MigrationWizardProps> = ({ isOpen, onClos
     onConfirm({
       backend,
       framework,
-      frontend: includeFrontend ? frontend : 'Disabled'
+      frontend: includeFrontend ? frontend : undefined,
+      frontendEnabled: includeFrontend
     });
   };
 
@@ -139,18 +140,12 @@ export const MigrationWizard: React.FC<MigrationWizardProps> = ({ isOpen, onClos
 
         {/* ── Footer ── */}
         <div className="bg-zinc-50 p-8 border-t-4 border-zinc-950 flex flex-col gap-4">
-          <div className="flex items-start gap-3 bg-amber-50 p-4 border-2 border-amber-400/50 italic">
-            <Sparkles size={16} className="text-amber-600 shrink-0 mt-0.5" />
-            <p className="text-[12px] font-semibold text-amber-900 leading-relaxed uppercase tracking-tight">
-              Surgical migration will utilize existing <span className="underline decoration-zinc-950 text-zinc-950">Architecture</span>, <span className="underline decoration-zinc-950 text-zinc-950">Map</span>, and <span className="underline decoration-zinc-950 text-zinc-950">Logic Snippets</span>.
-            </p>
-          </div>
           <div className="flex items-center gap-4">
             <button
               onClick={onClose}
               className="flex-1 h-16 bg-white border-2 border-zinc-950 text-xs font-medium uppercase tracking-widest hover:bg-zinc-100 transition-colors"
             >
-              Cancel Mission
+              Cancel
             </button>
             <button
               onClick={handleConfirm}

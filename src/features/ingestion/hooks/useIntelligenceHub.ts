@@ -119,9 +119,9 @@ export const useIntelligenceHub = (data: IngestionResponse) => {
       const context = await analysisClient.getLocalContext(data.project_id);
 
       let previousIntelligence = '';
-      if (action === 'migration') {
+      if (action === 'migration' || action === 'quick_migration') {
         const intelParts = Object.entries(analysisResults)
-          .filter(([key, val]) => key !== 'migration' && val)
+          .filter(([key, val]) => (key !== 'migration' && key !== 'quick_migration') && val)
           .map(([key, val]) => `STAGE: ${key.toUpperCase()}\n${val}`);
 
         if (intelParts.length > 0) {
