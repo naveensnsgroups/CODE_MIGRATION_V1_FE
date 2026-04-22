@@ -26,8 +26,8 @@ export const ActionDock: React.FC<ActionDockProps> = ({
     if (workbenchMode === 'standalone') {
       return action.id === 'migration' || action.id === 'quick_migration';
     }
-    // Enterprise: Show 5 tactical options, excluding 'general' and 'quick_migration'
-    return action.id !== 'general' && action.id !== 'quick_migration';
+    // Enterprise: Show 6 tactical options, excluding only 'quick_migration'
+    return action.id !== 'quick_migration';
   });
 
   return (

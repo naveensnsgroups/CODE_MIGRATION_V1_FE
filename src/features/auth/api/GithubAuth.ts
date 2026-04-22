@@ -7,5 +7,5 @@ export const exchangeCodeForToken = async (code: string): Promise<AuthResponse> 
 };
 
 export const getLoginUrl = async (): Promise<string> => {
-  return "http://localhost:8000/api/auth/login/github";
+  return "http://localhost:8000/api/auth/login";
 };

@@ -36,8 +36,8 @@ export const IntelligenceHub: React.FC<IntelligenceHubProps> = ({
     if (workbenchMode === 'standalone') {
       return action.id === 'migration' || action.id === 'quick_migration';
     }
-    // Enterprise: Show 5 tabs, excluding 'general' and 'quick_migration' to prevent disruption
-    return action.id !== 'general' && action.id !== 'quick_migration';
+    // Enterprise: Show 6 tabs, excluding only 'quick_migration' to prevent disruption
+    return action.id !== 'quick_migration';
   });
 
   return (

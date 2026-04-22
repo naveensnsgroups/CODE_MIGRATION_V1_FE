@@ -23,9 +23,9 @@
 body {
   background-color: white;
   color: #0c0a09; /* Zinc-950 */
-  font-family: var(--font-manrope), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-manrope), sans-serif;
   -webkit-font-smoothing: antialiased;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   @apply selection:bg-yellow-100;
 }
 
