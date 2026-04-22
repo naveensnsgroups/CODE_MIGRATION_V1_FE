@@ -13,6 +13,7 @@ interface IntelligenceHubProps {
   isAnalyzing: string | null;
   analysisResults: Record<string, string | null>;
   metadata: any;
+  userInfo: any;
   isActionsCollapsed: boolean;
   setIsActionsCollapsed: (collapsed: boolean) => void;
   onAnalyzeClick: (actionId: string) => void;
@@ -27,6 +28,7 @@ export const IntelligenceHub: React.FC<IntelligenceHubProps> = ({
   isAnalyzing,
   analysisResults,
   metadata,
+  userInfo,
   isActionsCollapsed,
   setIsActionsCollapsed,
   onAnalyzeClick,
@@ -34,7 +36,7 @@ export const IntelligenceHub: React.FC<IntelligenceHubProps> = ({
 }) => {
   const visibleActions = ACTIONS.filter(action => {
     if (workbenchMode === 'standalone') {
-      return action.id === 'migration' || action.id === 'quick_migration';
+      return action.id === 'quick_migration';
     }
     // Enterprise: Show 6 tabs, excluding only 'quick_migration' to prevent disruption
     return action.id !== 'quick_migration';
@@ -53,9 +55,17 @@ export const IntelligenceHub: React.FC<IntelligenceHubProps> = ({
 
       {/* Panel Header */}
       <div className="bg-zinc-950 px-6 py-3 flex items-center justify-between flex-shrink-0">
-        <span className="text-[12px] font-medium uppercase tracking-widest text-white italic">Intelligence Hub</span>
+        <div className="flex items-center gap-4">
+          <span className="text-[12px] font-medium uppercase tracking-widest text-white italic">Intelligence Hub</span>
+          {userInfo && (
+            <div className="flex items-center gap-2 pl-4 border-l border-zinc-800">
+              <img src={userInfo.avatar_url} alt="User avatar" className="w-5 h-5 rounded-sm border border-zinc-700 shadow-sm" />
+              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest italic">{userInfo.login}</span>
+            </div>
+          )}
+        </div>
         <div className="flex items-center gap-3">
-          <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">
+          <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">
             {metadata?.language || '—'} / {metadata?.framework || '—'}
           </span>
         </div>

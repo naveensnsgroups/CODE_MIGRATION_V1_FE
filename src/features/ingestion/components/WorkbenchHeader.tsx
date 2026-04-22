@@ -8,8 +8,6 @@ interface WorkbenchHeaderProps {
   onSyncIntelligence: () => void;
   onNewProject: () => void;
   showGeneratePlan: boolean;
-  workbenchMode: WorkbenchMode;
-  setWorkbenchMode: (mode: WorkbenchMode) => void;
 }
 
 export const WorkbenchHeader: React.FC<WorkbenchHeaderProps> = ({
@@ -17,9 +15,7 @@ export const WorkbenchHeader: React.FC<WorkbenchHeaderProps> = ({
   onGeneratePlan,
   onSyncIntelligence,
   onNewProject,
-  showGeneratePlan,
-  workbenchMode,
-  setWorkbenchMode
+  showGeneratePlan
 }) => {
   return (
     <div className="bg-white border-2 border-zinc-950 rounded-sm shadow-[6px_6px_0px_0px_rgba(9,9,11,1)] px-8 py-5 flex items-center justify-between">
@@ -33,31 +29,6 @@ export const WorkbenchHeader: React.FC<WorkbenchHeaderProps> = ({
               Project: <span className="text-zinc-500 ">{projectName}</span>
             </p>
           </div>
-        </div>
-
-        <div className="flex items-center bg-zinc-50 p-1 border-2 border-zinc-950 rounded-sm shadow-[4px_4px_0px_0px_rgba(9,9,11,1)]">
-          <button
-            onClick={() => setWorkbenchMode('enterprise')}
-            className={`px-5 py-2 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all rounded-sm border-2 ${
-              workbenchMode === 'enterprise'
-                ? 'bg-zinc-950 text-white border-zinc-950 shadow-[4px_4px_0px_0px_rgba(251,191,36,1)]'
-                : 'bg-white text-zinc-400 border-transparent hover:border-zinc-200'
-            }`}
-          >
-            <ShieldCheck size={14} className={workbenchMode === 'enterprise' ? 'text-amber-400' : ''} />
-            Enterprise Level
-          </button>
-          <button
-            onClick={() => setWorkbenchMode('standalone')}
-            className={`px-5 py-2 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all rounded-sm border-2 ${
-              workbenchMode === 'standalone'
-                ? 'bg-zinc-950 text-white border-zinc-950 shadow-[4px_4px_0px_0px_rgba(251,191,36,1)]'
-                : 'bg-white text-zinc-400 border-transparent hover:border-zinc-200'
-            }`}
-          >
-            <Zap size={14} className={workbenchMode === 'standalone' ? 'text-amber-400' : ''} />
-            Standalone Mode
-          </button>
         </div>
       </div>
       <div className="flex items-center gap-3">

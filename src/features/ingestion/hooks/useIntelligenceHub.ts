@@ -8,13 +8,17 @@ export const useIntelligenceHub = (data: IngestionResponse) => {
   const [isAnalyzing, setIsAnalyzing] = useState<string | null>(null);
   const [analysisResults, setAnalysisResults] = useState<Record<string, string | null>>({});
   const [activeAction, setActiveAction] = useState<string>('general');
-  const [workbenchMode, setWorkbenchMode] = useState<WorkbenchMode>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('workbench_mode') as WorkbenchMode;
-      return saved || 'enterprise';
+  const [workbenchMode, setWorkbenchMode] = useState<WorkbenchMode>('enterprise');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('workbench_mode') as WorkbenchMode;
+    if (saved) {
+      setWorkbenchMode(saved);
+      if (saved === 'standalone') {
+        setActiveAction('quick_migration');
+      }
     }
-    return 'enterprise';
-  });
+  }, []);
   const [isPolling, setIsPolling] = useState<string | null>(null);
 
   useEffect(() => {
@@ -22,7 +26,7 @@ export const useIntelligenceHub = (data: IngestionResponse) => {
       localStorage.setItem('workbench_mode', workbenchMode);
     }
     if (workbenchMode === 'standalone') {
-      setActiveAction('migration');
+      setActiveAction('quick_migration');
     }
   }, [workbenchMode]);
 
@@ -36,6 +40,10 @@ export const useIntelligenceHub = (data: IngestionResponse) => {
         });
 
         setAnalysisResults(prev => ({ ...prev, ...loadedResults }));
+        
+        if (response.data?.workbench_mode) {
+          setWorkbenchMode(response.data.workbench_mode);
+        }
 
         if (loadedResults['routes']) {
           setActiveAction('routes');
@@ -49,6 +57,10 @@ export const useIntelligenceHub = (data: IngestionResponse) => {
   }, [data.project_id]);
 
   useEffect(() => {
+    if (data.workbench_mode) {
+      setWorkbenchMode(data.workbench_mode as any);
+    }
+
     if (data.reports && Object.keys(data.reports).length > 0) {
       const loadedResults: Record<string, string> = {};
       Object.entries(data.reports).forEach(([action, content]) => {

@@ -21,13 +21,14 @@ export default function LandingPage() {
   const autoStarted = useRef(false);
   const prevUser = useRef(user);
   
-  const [workbenchMode, setWorkbenchMode] = useState<WorkbenchMode>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('workbench_mode') as WorkbenchMode;
-      return saved || 'enterprise';
-    }
-    return 'enterprise';
-  });
+  const [workbenchMode, setWorkbenchMode] = useState<WorkbenchMode>('enterprise');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem('workbench_mode') as WorkbenchMode;
+    if (saved) setWorkbenchMode(saved);
+  }, []);
 
   const handleModeChange = (mode: WorkbenchMode) => {
     setWorkbenchMode(mode);
@@ -76,7 +77,7 @@ export default function LandingPage() {
     const urlParam = searchParams.get('url');
     if (urlParam && !autoStarted.current) {
       autoStarted.current = true;
-      startIngestion(urlParam);
+      startIngestion(urlParam, workbenchMode, user);
     }
   }, [searchParams, handleLogin, router, startIngestion]);
 
@@ -89,7 +90,7 @@ export default function LandingPage() {
 
   const handleManualAnalyze = () => {
     if (repoUrl.trim()) {
-      startIngestion(repoUrl);
+      startIngestion(repoUrl, workbenchMode, user);
     }
   };
 
@@ -235,7 +236,7 @@ export default function LandingPage() {
         isOpen={isSelectorOpen}
         onClose={() => setIsSelectorOpen(false)}
         onSelect={(repoUrl: string) => {
-          startIngestion(repoUrl);
+          startIngestion(repoUrl, workbenchMode, user);
           setIsSelectorOpen(false);
         }}
       />

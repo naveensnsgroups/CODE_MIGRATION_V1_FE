@@ -61,8 +61,6 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
         onSyncIntelligence={syncIntelligence}
         onNewProject={() => window.location.reload()}
         showGeneratePlan={!!analysisResults['migration'] && !analysisResults['planner']}
-        workbenchMode={workbenchMode}
-        setWorkbenchMode={setWorkbenchMode}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -104,6 +102,7 @@ export const Workbench: React.FC<WorkbenchProps> = ({ data }) => {
           isAnalyzing={isAnalyzing}
           analysisResults={analysisResults}
           metadata={data.metadata}
+          userInfo={data.user_info}
           isActionsCollapsed={isActionsCollapsed}
           setIsActionsCollapsed={setIsActionsCollapsed}
           onAnalyzeClick={handleAnalyzeClick}

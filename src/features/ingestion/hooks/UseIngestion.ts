@@ -7,12 +7,12 @@ export const useIngestion = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const startIngestion = async (repoUrl: string) => {
+  const startIngestion = async (repoUrl: string, mode?: string, userInfo?: any) => {
     setLoading(true);
     setError(null);
     try {
       const token = localStorage.getItem('auth_token');
-      const response = await ingestRepository(repoUrl, token);
+      const response = await ingestRepository(repoUrl, token, mode, userInfo);
       setData(response);
     } catch (err: any) {
       //  Surgical Error Extraction (Catching FastAPI HTTPException detail)

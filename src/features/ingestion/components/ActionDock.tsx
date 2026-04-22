@@ -24,7 +24,7 @@ export const ActionDock: React.FC<ActionDockProps> = ({
 }) => {
   const visibleActions = ACTIONS.filter(action => {
     if (workbenchMode === 'standalone') {
-      return action.id === 'migration' || action.id === 'quick_migration';
+      return action.id === 'quick_migration';
     }
     // Enterprise: Show 6 tactical options, excluding only 'quick_migration'
     return action.id !== 'quick_migration';
