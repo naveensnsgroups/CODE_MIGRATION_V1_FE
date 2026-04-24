@@ -5,6 +5,7 @@ import { LogicHero } from './LogicHero';
 import { ArchitectureHero } from './ArchitectureHero';
 import { StrategyHero } from './StrategyHero';
 import { CodeLayerHero } from './CodeLayerHero';
+import { QuickMigrationHero } from './QuickMigrationHero';
 
 interface ReportDashboardProps {
   data: StructuredData;
@@ -26,6 +27,8 @@ export const ReportDashboard: React.FC<ReportDashboardProps> = ({ data, activeAc
         <CodeLayerHero data={data} />
       ) : activeAction === 'migration' ? (
         <StrategyHero data={data} />
+      ) : activeAction === 'quick_migration' ? (
+        <QuickMigrationHero data={data} />
       ) : (
         /*  Comprehensive Intelligence Hub (General & Default) */
         <ArchitectureHero data={data} />

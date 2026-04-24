@@ -113,8 +113,8 @@ export interface StructuredData {
     source: string;
     description: string;
   }>;
-  backend?: any[];
-  frontend?: any[];
+  backend?: any;
+  frontend?: any;
   assets?: any[];
   target_stack?: {
     backend: string;

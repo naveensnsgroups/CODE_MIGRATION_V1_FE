@@ -84,7 +84,7 @@ function cleanAndParse(raw: string | object | null, contextRaw?: string | null):
   if (parsed && typeof parsed === 'object') {
     const dataObj = parsed as any;
     // If we detect a specific agent payload structure, extract the payload
-    if (!dataObj.apis && !dataObj.models && !dataObj.routes && !dataObj.endpoints && !dataObj.files && !dataObj.target_stack) {
+    if (!dataObj.apis && !dataObj.models && !dataObj.routes && !dataObj.endpoints && !dataObj.files && !dataObj.target_stack && !dataObj.backend && !dataObj.frontend) {
       const buried = dataObj.result?.response || dataObj.result || dataObj.response || dataObj.data;
       if (buried && typeof buried === 'object') {
         parsed = { ...buried, ...dataObj }; // Merge so we keep original metadata like 'action'
