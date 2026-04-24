@@ -101,7 +101,7 @@ export const QuickMigrationHero: React.FC<{ data: StructuredData }> = ({ data })
           </div>
           <div className="bg-white p-4 border-2 border-zinc-950 shadow-[4px_4px_0px_0px_rgba(9,9,11,1)]">
             <span className="text-[12px] font-bold text-zinc-400 uppercase tracking-widest block mb-1">Install Command</span>
-            <code className="text-lg font-mono font-bold text-zinc-900 bg-zinc-100 px-2 py-1 block mt-1 truncate">
+            <code className="text-sm font-mono font-bold text-zinc-900 bg-zinc-100 px-2 py-1 block mt-1 truncate">
               {b.install_command}
             </code>
           </div>
