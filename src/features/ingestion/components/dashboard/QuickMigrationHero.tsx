@@ -26,6 +26,16 @@ export const QuickMigrationHero: React.FC<{ data: StructuredData }> = ({ data })
   const backend = data.backend;
   const frontend = data.frontend;
 
+  // Universal safe string converter — prevents "Objects are not valid as a React child" crashes
+  const safeStr = (val: any): string => {
+    if (val === null || val === undefined) return '';
+    if (typeof val === 'string') return val;
+    if (typeof val === 'number' || typeof val === 'boolean') return String(val);
+    if (Array.isArray(val)) return val.map(v => safeStr(v)).join(', ');
+    if (typeof val === 'object') return JSON.stringify(val).slice(0, 200);
+    return String(val);
+  };
+
   const handleDownload = async () => {
     const zip = new JSZip();
     
@@ -96,13 +106,13 @@ export const QuickMigrationHero: React.FC<{ data: StructuredData }> = ({ data })
           <div className="bg-zinc-950 p-4 border-2 border-zinc-950 shadow-[4px_4px_0px_0px_rgba(251,191,36,1)]">
             <span className="text-[12px] font-bold text-amber-500 uppercase tracking-widest block mb-1">Target Framework</span>
             <span className="text-lg font-bold text-white uppercase italic tracking-tighter flex items-center gap-2">
-              <Server size={18} /> {b.framework || 'Python/FastAPI'}
+              <Server size={18} /> {safeStr(b.framework) || 'Python/FastAPI'}
             </span>
           </div>
           <div className="bg-white p-4 border-2 border-zinc-950 shadow-[4px_4px_0px_0px_rgba(9,9,11,1)]">
             <span className="text-[12px] font-bold text-zinc-400 uppercase tracking-widest block mb-1">Install Command</span>
             <code className="text-sm font-mono font-bold text-zinc-900 bg-zinc-100 px-2 py-1 block mt-1 truncate">
-              {b.install_command}
+              {safeStr(b.install_command)}
             </code>
           </div>
         </div>
@@ -111,9 +121,9 @@ export const QuickMigrationHero: React.FC<{ data: StructuredData }> = ({ data })
         {b.dependencies && (
           <div className="mb-8">
             <div className="flex flex-wrap gap-2">
-              {b.dependencies.map((dep: string, i: number) => (
+              {(Array.isArray(b.dependencies) ? b.dependencies : []).map((dep: any, i: number) => (
                 <span key={i} className="px-3 py-1 bg-zinc-100 border border-zinc-200 text-[12px] font-black text-zinc-700 uppercase tracking-tight rounded-full">
-                  {dep}
+                  {safeStr(dep)}
                 </span>
               ))}
             </div>
@@ -124,19 +134,27 @@ export const QuickMigrationHero: React.FC<{ data: StructuredData }> = ({ data })
         <div className="mb-8">
           <SectionHeading icon={<Terminal size={14} />} title="Initialization Protocol" />
           <div className="space-y-3">
-            {b.setup_steps?.map((s: any, i: number) => (
-              <div key={i} className="flex gap-4 items-start p-4 bg-white border border-zinc-200 rounded-sm group hover:border-zinc-950 transition-all">
-                <div className="w-6 h-6 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 text-[12px] font-black text-zinc-400 group-hover:bg-zinc-950 group-hover:text-white transition-colors">
-                  0{i + 1}
+            {(Array.isArray(b.setup_steps) ? b.setup_steps : []).map((s: any, i: number) => {
+              // Support both string steps and object steps {step, command}
+              const isString = typeof s === 'string';
+              const stepLabel = isString ? s : safeStr(s.step ?? s.key ?? s.name ?? s);
+              const stepCommand = isString ? null : safeStr(s.command ?? s.example ?? s.description ?? '');
+              return (
+                <div key={i} className="flex gap-4 items-start p-4 bg-white border border-zinc-200 rounded-sm group hover:border-zinc-950 transition-all">
+                  <div className="w-6 h-6 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 text-[11px] font-black text-zinc-400 group-hover:bg-zinc-950 group-hover:text-white transition-colors">
+                    {i + 1}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-zinc-800 tracking-tight">{stepLabel}</p>
+                    {stepCommand && (
+                      <code className="text-[12px] font-mono text-zinc-500 bg-zinc-50 px-2 py-0.5 rounded-sm block w-full mt-1">
+                        $ {stepCommand}
+                      </code>
+                    )}
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-lg font-bold text-zinc-900 uppercase tracking-tight mb-1">{s.step}</p>
-                  <code className="text-[12px] font-mono text-zinc-500 bg-zinc-50 px-2 py-0.5 rounded-sm block w-full">
-                    $ {s.command}
-                  </code>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -144,8 +162,8 @@ export const QuickMigrationHero: React.FC<{ data: StructuredData }> = ({ data })
         {b.project_structure && (
           <div className="mb-8">
             <SectionHeading icon={<Layout size={14} />} title="Surgical File Structure" />
-            <div className="bg-zinc-50 border-2 border-zinc-950 p-6 font-mono text-lg text-zinc-800 rounded-sm leading-relaxed whitespace-pre shadow-inner">
-              {b.project_structure}
+            <div className="bg-zinc-50 border-2 border-zinc-950 p-6 font-mono text-sm text-zinc-800 rounded-sm leading-relaxed whitespace-pre shadow-inner">
+              {safeStr(b.project_structure)}
             </div>
           </div>
         )}
@@ -155,7 +173,7 @@ export const QuickMigrationHero: React.FC<{ data: StructuredData }> = ({ data })
           <div className="mb-8">
             <SectionHeading icon={<Info size={14} />} title="Project Manifest (README)" />
             <div className="bg-white border-2 border-zinc-950 p-8 rounded-sm shadow-[4px_4px_0px_0px_rgba(9,9,11,0.05)] prose prose-zinc prose-sm max-w-none">
-              <ReactMarkdown>{b.README}</ReactMarkdown>
+              <ReactMarkdown>{safeStr(b.README)}</ReactMarkdown>
             </div>
           </div>
         )}
@@ -164,13 +182,29 @@ export const QuickMigrationHero: React.FC<{ data: StructuredData }> = ({ data })
         {b.env_variables && (
           <div className="mb-8">
             <SectionHeading icon={<ShieldAlert size={14} />} title="Security Environment Configuration" />
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {b.env_variables.map((env: string, i: number) => (
-                <div key={i} className="bg-zinc-100 border border-zinc-300 p-2 rounded-sm flex items-center justify-between group hover:border-zinc-950 transition-colors">
-                  <span className="text-[12px] font-mono font-bold text-zinc-700 group-hover:text-zinc-950">{env}</span>
-                  <Copy size={10} className="text-zinc-400 opacity-0 group-hover:opacity-100 cursor-pointer" onClick={() => navigator.clipboard.writeText(env)} />
-                </div>
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {(Array.isArray(b.env_variables) ? b.env_variables : []).map((env: any, i: number) => {
+                // Support both string env vars and object env vars {key, description, example}
+                const isObj = typeof env === 'object' && env !== null;
+                const envKey = isObj ? (env.key ?? env.name ?? `VAR_${i}`) : safeStr(env);
+                const envDesc = isObj ? safeStr(env.description ?? '') : '';
+                const envExample = isObj ? safeStr(env.example ?? '') : '';
+                const copyVal = isObj ? `${envKey}=${envExample}` : safeStr(env);
+                return (
+                  <div key={i} className="bg-zinc-50 border border-zinc-200 p-3 rounded-sm group hover:border-zinc-950 transition-colors">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[11px] font-mono font-black text-zinc-900 uppercase tracking-widest">{envKey}</span>
+                      <Copy size={10} className="text-zinc-400 opacity-0 group-hover:opacity-100 cursor-pointer shrink-0" onClick={() => navigator.clipboard.writeText(copyVal)} />
+                    </div>
+                    {envDesc && <p className="text-[11px] text-zinc-500 font-medium mb-1 leading-snug">{envDesc}</p>}
+                    {envExample && (
+                      <code className="text-[11px] font-mono text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-sm block w-full">
+                        = {envExample}
+                      </code>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -216,10 +250,10 @@ export const QuickMigrationHero: React.FC<{ data: StructuredData }> = ({ data })
               <ShieldAlert size={14} /> Critical Deployment Notes
             </div>
             <ul className="space-y-3">
-              {b.notes.map((note: string, i: number) => (
-                <li key={i} className="flex gap-3 text-lg text-amber-800 font-medium italic">
+              {(Array.isArray(b.notes) ? b.notes : []).map((note: any, i: number) => (
+                <li key={i} className="flex gap-3 text-sm text-amber-800 font-medium italic">
                   <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
-                  {note}
+                  {safeStr(note)}
                 </li>
               ))}
             </ul>
@@ -254,9 +288,9 @@ export const QuickMigrationHero: React.FC<{ data: StructuredData }> = ({ data })
         {f.dependencies && (
           <div className="mb-8">
             <div className="flex flex-wrap gap-2">
-              {f.dependencies.map((dep: string, i: number) => (
+            {(Array.isArray(f.dependencies) ? f.dependencies : []).map((dep: any, i: number) => (
                 <span key={i} className="px-3 py-1 bg-zinc-100 border border-zinc-200 text-[12px] font-black text-zinc-700 uppercase tracking-tight rounded-full">
-                  {dep}
+                  {safeStr(dep)}
                 </span>
               ))}
             </div>
@@ -267,10 +301,10 @@ export const QuickMigrationHero: React.FC<{ data: StructuredData }> = ({ data })
         <div className="mb-8">
           <SectionHeading icon={<Terminal size={14} />} title="Scaffolding Protocol" />
           <div className="space-y-2">
-            {f.setup_steps?.map((step: string, i: number) => (
+            {(Array.isArray(f.setup_steps) ? f.setup_steps : []).map((step: any, i: number) => (
               <div key={i} className="flex gap-4 items-center p-3 bg-white border-l-4 border-zinc-950 shadow-sm">
                  <CheckCircle2 size={14} className="text-zinc-300" />
-                 <span className="text-lg font-medium text-zinc-700">{step}</span>
+                 <span className="text-sm font-medium text-zinc-700">{safeStr(step.step ?? step.key ?? step.name ?? step)}</span>
               </div>
             ))}
           </div>

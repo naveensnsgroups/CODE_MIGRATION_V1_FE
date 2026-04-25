@@ -163,7 +163,18 @@ export const SafeText: React.FC<{ text?: any; fallback?: string }> = ({ text, fa
 export const SummaryBox: React.FC<{ summary?: any; activeAction?: string }> = ({ summary, activeAction }) => {
   if (!summary) return null;
 
+  // For quick_migration, summary might be an object like {project_type, framework, ...}
+  // We need to guard against nested objects/arrays that can't be rendered as React children
   const isObject = typeof summary === 'object' && !Array.isArray(summary);
+
+  const safeRenderValue = (val: any): string => {
+    if (val === null || val === undefined) return '—';
+    if (typeof val === 'string') return val;
+    if (typeof val === 'number' || typeof val === 'boolean') return String(val);
+    if (Array.isArray(val)) return val.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v)).join(', ');
+    if (typeof val === 'object') return JSON.stringify(val).substring(0, 100);
+    return String(val);
+  };
 
   return (
     <div className="relative group">
@@ -192,7 +203,7 @@ export const SummaryBox: React.FC<{ summary?: any; activeAction?: string }> = ({
                 <div key={key} className="bg-white border border-zinc-200 p-4 rounded-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,0.05)] transition-all hover:bg-zinc-50">
                   <span className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-1">{label}</span>
                   <span className="text-[14px] font-bold text-zinc-950 uppercase italic tracking-tight">
-                    <SafeText text={value} fallback="—" />
+                    {safeRenderValue(value)}
                   </span>
                 </div>
               );

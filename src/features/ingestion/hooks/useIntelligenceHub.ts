@@ -35,8 +35,11 @@ export const useIntelligenceHub = (data: IngestionResponse) => {
       const response = await apiClient.get(`analysis/${data.project_id}/reports`);
       if (response.data?.reports) {
         const loadedResults: Record<string, string> = {};
-        response.data.reports.forEach((report: { action: string; content: string }) => {
-          loadedResults[report.action] = report.content;
+        response.data.reports.forEach((report: { action: string; content: any }) => {
+          // Always serialize to string — content may be an object (raw MongoDB doc) or already a string
+          loadedResults[report.action] = typeof report.content === 'string'
+            ? report.content
+            : JSON.stringify(report.content);
         });
 
         setAnalysisResults(prev => ({ ...prev, ...loadedResults }));
@@ -85,7 +88,10 @@ export const useIntelligenceHub = (data: IngestionResponse) => {
           if (response.data?.reports) {
             const remoteReport = response.data.reports.find((r: any) => r.action === isPolling);
             if (remoteReport) {
-              setAnalysisResults(prev => ({ ...prev, [isPolling]: remoteReport.content }));
+              const safeContent = typeof remoteReport.content === 'string'
+                ? remoteReport.content
+                : JSON.stringify(remoteReport.content);
+              setAnalysisResults(prev => ({ ...prev, [isPolling]: safeContent }));
               setIsPolling(null);
               setIsAnalyzing(null);
             }

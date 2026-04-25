@@ -83,11 +83,21 @@ function cleanAndParse(raw: string | object | null, contextRaw?: string | null):
   // 3.  Precision Promotion: If top-level keys are missing but buried in arrays, promote them
   if (parsed && typeof parsed === 'object') {
     const dataObj = parsed as any;
-    // If we detect a specific agent payload structure, extract the payload
-    if (!dataObj.apis && !dataObj.models && !dataObj.routes && !dataObj.endpoints && !dataObj.files && !dataObj.target_stack && !dataObj.backend && !dataObj.frontend) {
-      const buried = dataObj.result?.response || dataObj.result || dataObj.response || dataObj.data;
+
+    // For quick_migration: content is the raw doc itself — promote backend/frontend up
+    if (dataObj.content && typeof dataObj.content === 'object') {
+      const inner = dataObj.content as any;
+      if (inner.backend || inner.frontend) {
+        parsed = { ...dataObj, ...inner };
+      }
+    }
+
+    // Generic precision promotion for other agent types
+    const p = parsed as any;
+    if (!p.apis && !p.models && !p.routes && !p.endpoints && !p.files && !p.target_stack && !p.backend && !p.frontend) {
+      const buried = p.result?.response || p.result || p.response || p.data;
       if (buried && typeof buried === 'object') {
-        parsed = { ...buried, ...dataObj }; // Merge so we keep original metadata like 'action'
+        parsed = { ...buried, ...p };
       }
     }
   }
